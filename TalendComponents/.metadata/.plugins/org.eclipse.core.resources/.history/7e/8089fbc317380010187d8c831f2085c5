@@ -1,0 +1,83 @@
+package de.sones.talend.helper;
+
+/**
+ * It figures out that Talend handles the data like in 'tables'. So we temp. store it in a values table 'java.util.ArrayList<java.util.HashMap<String, String>> values'.
+ * There maybe a discussion point of string is the right 'generic' type to store the data, but because the data is sent as String via REST (XML or JSON) it seems to be OK.
+ *
+ * This helper allows us to convert a string value back to the right data type. It also contains a map which stores the information which data type needs to be wrapped by string
+ * literals.
+ * 
+ * The sones GraphDB supports Integer, Double, String, Boolean and DateTime .
+ * 
+ * @author david.maier@sones.de
+ *
+ */
+public class TypeHelper {
+	
+	private java.util.HashMap<String, String> typeToLitMap = new java.util.HashMap<String, String>();
+	
+	public TypeHelper()
+	{
+		//Map types to literal characters
+		typeToLitMap.put("id_String", "'");
+		typeToLitMap.put("id_Long","");
+		typeToLitMap.put("id_Double","");
+		typeToLitMap.put("id_Integer","");
+		typeToLitMap.put("id_Date","'");
+		typeToLitMap.put("id_Float","");
+		typeToLitMap.put("id_Boolean","");
+	}
+	
+	public java.util.HashMap<String, String> getTypeToLitMap()
+	{
+		return this.typeToLitMap;
+	}
+	
+	public int strToInt(String value)
+	{
+		return Integer.valueOf(value).intValue();
+	}
+
+	public long strToLong(String value)
+	{
+		return Long.valueOf(value).longValue();
+	}
+
+	public float strToFloat(String value)
+	{
+		return Float.valueOf(value).floatValue();
+	}
+
+	public double strToDouble(String value)
+	{
+		return Double.valueOf(value).doubleValue();
+	}
+
+	public boolean strToBoolean(String value)
+	{
+		return Boolean.valueOf(value).booleanValue();
+	}
+
+	public java.util.Date strToDate(String value)
+	{
+		java.util.Date result = new java.util.Date();
+	
+		//The format is like: Fri Dec 24 00:00:00 CET 2010
+		java.text.SimpleDateFormat format = new java.text.SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
+	
+		try {
+		
+			result = format.parse(value);
+		}
+		catch (Exception e)
+		{
+			System.err.println("Could not parse date value.");
+		}
+	
+		return result; 	
+	}
+	
+	
+	
+	
+}

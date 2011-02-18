@@ -1,0 +1,133 @@
+package de.sones.talend.helper;
+
+public class TSonesOutputHelper {
+
+private StringBuilder insert =  new StringBuilder();
+	
+	private java.util.ArrayList<String> tmpAttrNames = new java.util.ArrayList<String>();	
+	
+	private java.util.HashMap<String, String> typeToLitMap = new java.util.HashMap<String, String>();
+	
+	
+	public TSonesOutputHelper()
+	{
+		//Map types to literal characters
+		typeToLitMap.put("id_String", "'");
+		typeToLitMap.put("id_Long","");
+		typeToLitMap.put("id_Double","");
+		typeToLitMap.put("id_Integer","");
+		typeToLitMap.put("id_Date","'");
+		typeToLitMap.put("id_Float","");
+		typeToLitMap.put("id_Boolean","");
+	}
+
+	
+	public void resetInsertStmt()
+	{
+		this.insert = new StringBuilder("INSERT INTO ");
+		this.tmpAttrNames = new java.util.ArrayList<String>();
+	}
+	
+	
+	public void setInsertStmtVertexType(String vertexType)
+	{
+		this.insert.append(vertexType);
+	}
+	
+	public void addInsertStmtAttr(String attrName, String attrVal, String type)
+	{
+		<%	
+		int numOfAttr = 0;
+		
+		List<IMetadataTable> metadatas = node.getMetadataList();
+		
+		if ((metadatas!=null)&&(metadatas.size()>0)) {
+		
+			IMetadataTable metadata = metadatas.get(0);
+			
+			numOfAttr = metadata.getListColumns().size();	
+		}			
+		%>
+		
+		int numOfAttr = <%=numOfAttr%>; 
+	
+		this.tmpAttrNames.add(attrName);
+		
+
+		if (tmpAttrNames.size()==1)
+		{
+			insert.append(" VALUES" + " (");
+		}
+		
+		if (attrVal != null)
+		{
+			if (tmpAttrNames.size()==1)
+			{
+				insert.append(attrName + "=" + litAttrVal(attrVal, type));
+			}
+			else
+			{
+				insert.append(", " + attrName + "=" + litAttrVal(attrVal, type));
+			}
+		}
+		
+		if (tmpAttrNames.size()==numOfAttr)
+		{
+			insert.append(")");
+		}
+	}
+	
+	private String litAttrVal(String attrVal, String type)
+	{
+		return typeToLitMap.get(type) + attrVal + typeToLitMap.get(type);
+	}
+	
+	
+	public void printInsert()
+	{
+		String insertStr = this.insert.toString();
+		
+		System.out.println(insertStr);
+	}
+	
+	public void doInsert()
+	{
+		String insertStr = this.insert.toString();
+		
+		<%		
+		String host = ElementParameterParser.getValue(node, "__HOST__");
+		String port = ElementParameterParser.getValue(node, "__PORT__");
+		String db = ElementParameterParser.getValue(node, "__DBNAME__");
+		String user = ElementParameterParser.getValue(node, "__USER__");
+		String password = ElementParameterParser.getValue(node, "__PASS__");
+		%>		
+				
+		String host = "<%=host%>";
+		String port = "<%=port%>";
+		String db = "<%=db%>";
+		String user  = "<%=user%>";
+		String password  = "<%=password%>";
+	
+		
+		try {
+			
+			java.net.URI uri = new java.net.URI("http://" + host + ":" + port);
+			
+			de.sones.GraphDSJavaClient.GraphDSJavaClient restClient = new de.sones.GraphDSJavaClient.GraphDSJavaClient(uri,user,password);
+						
+			de.sones.GraphDSJavaClient.Result.QueryResult result  = restClient.query(insertStr);
+			
+			if (result.getErrors().size() != 0)
+			{
+				for(de.sones.GraphDSJavaClient.Errors.IError error : result.getErrors())
+				{
+					System.err.println(error.getMessage());
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}	
+	}
+}

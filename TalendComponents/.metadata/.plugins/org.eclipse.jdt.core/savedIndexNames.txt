@@ -1,0 +1,5 @@
+INDEX VERSION 1.126+Y:\Eclipse\TalendComponents\.metadata\.plugins\org.eclipse.jdt.core
+1635215210.index
+2310589525.index
+2996523913.index
+1664169469.index

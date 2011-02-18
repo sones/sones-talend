@@ -1,0 +1,343 @@
+import org.talend.core.model.process.INode;
+import org.talend.core.model.process.ElementParameterParser;
+import org.talend.core.model.metadata.IMetadataTable;
+import org.talend.core.model.metadata.IMetadataColumn;
+import org.talend.core.model.process.IConnection;
+import org.talend.core.model.process.IConnectionCategory;
+import org.talend.core.model.metadata.types.JavaTypesManager;
+import org.talend.core.model.metadata.types.JavaType;
+import org.talend.designer.codegen.config.CodeGeneratorArgument;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
+
+public class CLASS
+{
+  protected static String nl;
+  public static synchronized CLASS create(String lineSeparator)
+  {
+    nl = lineSeparator;
+    CLASS result = new CLASS();
+    nl = null;
+    return result;
+  }
+
+  public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
+  protected final String TEXT_1 = "/*" + NL + " * sones GraphDB - OpenSource Graph Database - http://www.sones.com" + NL + " * Copyright (C) 2007-2011 sones GmbH" + NL + " *" + NL + " * This file is part of sones GraphDB OpenSource Edition." + NL + " *" + NL + " * sones GraphDB OSE is free software: you can redistribute it and/or modify" + NL + " * it under the terms of the GNU Affero General Public License as published by" + NL + " * the Free Software Foundation, version 3 of the License." + NL + " *" + NL + " * sones GraphDB OSE is distributed in the hope that it will be useful," + NL + " * but WITHOUT ANY WARRANTY; without even the implied warranty of" + NL + " * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the" + NL + " * GNU Affero General Public License for more details." + NL + " *" + NL + " * You should have received a copy of the GNU Affero General Public License" + NL + " * along with sones GraphDB OSE. If not, see <http://www.gnu.org/licenses/>." + NL + " */" + NL;
+  protected final String TEXT_2 = NL;
+  protected final String TEXT_3 = " " + NL + "" + NL + "" + NL + "\tclass Sones_";
+  protected final String TEXT_4 = NL + "\t{" + NL + "\t\t/**" + NL + "\t\t * We previously gather all values and store them in this 'table'. We do this because via REST a 'FROM ${Vertex type} SELECT *' always returns the whole result set." + NL + "\t\t */" + NL + "\t\tprivate java.util.ArrayList<java.util.HashMap<String, String>> values = new java.util.ArrayList<java.util.HashMap<String, String>>();\t\t" + NL + "\t\tprivate int counter  = 0;" + NL + "\t" + NL + "\t\tpublic Sones_";
+  protected final String TEXT_5 = "()" + NL + "\t\t{" + NL + "\t\t\tgenValues();" + NL + "\t\t}" + NL + "" + NL + "\t    /**" + NL + "\t\t * To fill the values 'table' with data. " + NL + "\t\t */" + NL + "\t\tpublic void genValues()" + NL + "\t\t{" + NL + "\t\t\t" + NL + "\t\tthis.values = new java.util.ArrayList<java.util.HashMap<String, String>>();" + NL + "\t\t\t\t" + NL + "\t\t";
+  protected final String TEXT_6 = "\t\t" + NL + "\t\t\t" + NL + "\t\tde.sones.talend.helper.LitHelper litHelper = new de.sones.talend.helper.LitHelper();" + NL + "\t\t" + NL + "\t\tString host = litHelper.trimSingleQuote(\"";
+  protected final String TEXT_7 = "\");" + NL + "\t\tString port = litHelper.trimSingleQuote(\"";
+  protected final String TEXT_8 = "\");" + NL + "\t\t//The Database property is not yet used" + NL + "\t\tString db = litHelper.trimSingleQuote(\"";
+  protected final String TEXT_9 = "\");" + NL + "\t\tString user  = litHelper.trimSingleQuote(\"";
+  protected final String TEXT_10 = "\");" + NL + "\t\tString password  = litHelper.trimSingleQuote(\"";
+  protected final String TEXT_11 = "\");" + NL + "\t\tString vertexType = litHelper.trimSingleQuote(\"";
+  protected final String TEXT_12 = "\");" + NL + "\t" + NL + "\t\ttry {" + NL + "\t\t\t" + NL + "\t\t\tjava.net.URI uri = new java.net.URI(\"http://\" + host + \":\" + port);" + NL + "\t\t\t" + NL + "\t\t\tde.sones.GraphDSJavaClient.GraphDSJavaClient restClient = new de.sones.GraphDSJavaClient.GraphDSJavaClient(uri,user,password);" + NL + "\t\t\t" + NL + "\t\t\tString queryStr = \"FROM \" + vertexType + \" SELECT *\";" + NL + "\t\t\t" + NL + "\t\t\tde.sones.GraphDSJavaClient.Result.QueryResult result  = restClient.query(queryStr);" + NL + "\t\t\t" + NL + "\t\t\tif (result.getErrors().size() == 0)" + NL + "\t\t\t{" + NL + "\t\t\t\tfor (de.sones.GraphDSJavaClient.API.IVertex vertex : result.getVertices())" + NL + "\t\t\t\t{\t" + NL + "\t\t\t\t\tjava.util.HashMap<String, String> row = new java.util.HashMap<String, String>();" + NL + "\t\t\t\t\t" + NL + "\t\t\t\t\tfor (java.util.Map.Entry<String, Object> attribute : vertex.getAttributes().entrySet())" + NL + "\t\t\t\t\t{" + NL + "\t\t\t\t\t\tboolean isSimpleAttr = (!(attribute.getValue() instanceof de.sones.GraphDSJavaClient.API.Edge)) &&" + NL + "\t\t\t\t\t\t                       (!(attribute.getValue() instanceof de.sones.GraphDSJavaClient.DataStructures.ObjectUUID)) &&" + NL + "\t\t\t\t\t\t                       (!(attribute.getValue() instanceof de.sones.GraphDSJavaClient.DataStructures.ObjectRevisionID))" + NL + "\t\t\t\t\t\t                       ;" + NL + "\t\t\t\t\t\t" + NL + "\t\t\t\t\t\tif (isSimpleAttr)" + NL + "\t\t\t\t\t\t{" + NL + "\t\t\t\t\t\t\tString attributeName = attribute.getKey();\t\t" + NL + "\t\t\t\t\t\t\tString attributeValue = \"\" + attribute.getValue();" + NL + "\t\t\t\t\t\t\t" + NL + "\t\t\t\t\t\t\trow.put(attributeName, attributeValue);" + NL + "\t\t\t\t\t\t\t" + NL + "\t\t\t\t\t\t}\t\t" + NL + "\t\t\t\t\t}" + NL + "\t\t\t\t" + NL + "\t\t\t\t\tthis.values.add(row);" + NL + "\t\t\t\t}" + NL + "\t\t\t}" + NL + "\t\t\telse" + NL + "\t\t\t{" + NL + "\t\t\t\tfor(de.sones.GraphDSJavaClient.Errors.IError error : result.getErrors())" + NL + "\t\t\t\t{" + NL + "\t\t\t\t\tSystem.err.println(error.getMessage());" + NL + "\t\t\t\t}" + NL + "\t\t\t}" + NL + "\t\t}" + NL + "\t\tcatch (Exception e)" + NL + "\t\t{" + NL + "\t\t\te.printStackTrace();" + NL + "\t\t}\t" + NL + "\t}" + NL + "\t\t" + NL + "\t\t" + NL + "\t\t" + NL + "\t\t/**" + NL + "\t\t * To get the next value from the 'values' table" + NL + "\t\t */" + NL + "\t\tpublic java.util.HashMap<String,String> getNextRow()" + NL + "\t\t{" + NL + "\t\t\tjava.util.HashMap<String,String> result = null;" + NL + "\t\t\t" + NL + "\t\t\tresult = this.values.get(this.counter);" + NL + "\t\t\t" + NL + "\t\t\tif (this.counter < values.size() - 1)" + NL + "\t\t\t{" + NL + "\t\t\t\tthis.counter++;\t\t\t" + NL + "\t\t\t}" + NL + "\t\t\t" + NL + "\t\t\treturn result;" + NL + "\t\t}" + NL + "\t\t" + NL + "\t\t/**" + NL + "\t\t * Getter for the 'values' table" + NL + "\t\t */" + NL + "\t\tpublic java.util.ArrayList<java.util.HashMap<String, String>> getValues()" + NL + "\t\t{" + NL + "\t\t\treturn this.values;" + NL + "\t\t}" + NL + "\t}" + NL + "" + NL + "Sones_";
+  protected final String TEXT_13 = " sones_";
+  protected final String TEXT_14 = " = new Sones_";
+  protected final String TEXT_15 = "();" + NL + "de.sones.talend.helper.TypeHelper helper_";
+  protected final String TEXT_16 = " = new de.sones.talend.helper.TypeHelper();" + NL + "" + NL + "int nb_line_";
+  protected final String TEXT_17 = " = 0;" + NL;
+  protected final String TEXT_18 = NL + "\t\t" + NL + "\t\t" + NL + "\t\tfor (int i_";
+  protected final String TEXT_19 = " = 0; i_";
+  protected final String TEXT_20 = " < sones_";
+  protected final String TEXT_21 = ".getValues().size(); i_";
+  protected final String TEXT_22 = "++) {\t\t" + NL + "\t\t\t" + NL + "\t\t\tjava.util.HashMap<String, String> row_";
+  protected final String TEXT_23 = " = sones_";
+  protected final String TEXT_24 = ".getNextRow();" + NL + "\t\t" + NL + "\t\t";
+  protected final String TEXT_25 = "\t\t" + NL + "\t\t\t\t" + NL + "\t\t\t\t" + NL + "\t\t\t\t";
+  protected final String TEXT_26 = NL + "\t\t\t\t\t" + NL + "\t\t\t\tif (row_";
+  protected final String TEXT_27 = ".get(\"";
+  protected final String TEXT_28 = "\")!=null)" + NL + "\t\t\t\t{" + NL + "\t\t\t\t" + NL + "\t\t\t\t";
+  protected final String TEXT_29 = NL + "\t\t\t\t\t\t";
+  protected final String TEXT_30 = ".";
+  protected final String TEXT_31 = " = row_";
+  protected final String TEXT_32 = ".get(\"";
+  protected final String TEXT_33 = "\");\t\t\t\t\t" + NL + "\t\t\t\t";
+  protected final String TEXT_34 = NL + NL + "\t\t\t\t";
+  protected final String TEXT_35 = NL + "\t\t\t\t\t\t";
+  protected final String TEXT_36 = ".";
+  protected final String TEXT_37 = " = helper_";
+  protected final String TEXT_38 = ".strToLong(row_";
+  protected final String TEXT_39 = ".get(\"";
+  protected final String TEXT_40 = "\"));\t\t\t\t\t" + NL + "\t\t\t\t";
+  protected final String TEXT_41 = NL + "\t\t\t\t\t\t\t\t" + NL + "\t\t\t\t";
+  protected final String TEXT_42 = NL + "\t\t\t\t\t\t";
+  protected final String TEXT_43 = ".";
+  protected final String TEXT_44 = " = helper_";
+  protected final String TEXT_45 = ".strToDouble(row_";
+  protected final String TEXT_46 = ".get(\"";
+  protected final String TEXT_47 = "\"));\t\t\t\t\t" + NL + "\t\t\t\t";
+  protected final String TEXT_48 = NL + "\t\t\t\t\t\t\t\t" + NL + "\t\t\t\t";
+  protected final String TEXT_49 = NL + "\t\t\t\t\t\t";
+  protected final String TEXT_50 = ".";
+  protected final String TEXT_51 = " = helper_";
+  protected final String TEXT_52 = ".strToInt(row_";
+  protected final String TEXT_53 = ".get(\"";
+  protected final String TEXT_54 = "\"));\t\t\t\t\t" + NL + "\t\t\t\t";
+  protected final String TEXT_55 = NL + "\t\t\t\t" + NL + "\t\t\t\t" + NL + "\t\t\t\t";
+  protected final String TEXT_56 = NL + "\t\t\t\t\t\t";
+  protected final String TEXT_57 = ".";
+  protected final String TEXT_58 = " = helper_";
+  protected final String TEXT_59 = ".strToDate(row_";
+  protected final String TEXT_60 = ".get(\"";
+  protected final String TEXT_61 = "\"));\t\t\t\t\t" + NL + "\t\t\t\t";
+  protected final String TEXT_62 = NL + "\t\t\t\t" + NL + "" + NL + "\t\t\t\t";
+  protected final String TEXT_63 = NL + "\t\t\t\t\t\t";
+  protected final String TEXT_64 = ".";
+  protected final String TEXT_65 = " = helper_";
+  protected final String TEXT_66 = ".strToFloat(row_";
+  protected final String TEXT_67 = ".get(\"";
+  protected final String TEXT_68 = "\"));\t\t\t\t\t" + NL + "\t\t\t\t";
+  protected final String TEXT_69 = NL + "\t\t\t\t" + NL + "\t\t\t\t" + NL + "\t\t\t\t";
+  protected final String TEXT_70 = NL + "\t\t\t\t\t\t";
+  protected final String TEXT_71 = ".";
+  protected final String TEXT_72 = " = helper_";
+  protected final String TEXT_73 = ".strToBoolean(row_";
+  protected final String TEXT_74 = ".get(\"";
+  protected final String TEXT_75 = "\"));\t\t\t\t\t" + NL + "\t\t\t\t";
+  protected final String TEXT_76 = NL + "\t\t\t\t" + NL + "\t\t\t\t}" + NL + "\t\t\t\telse" + NL + "\t\t\t\t{" + NL + "\t\t\t\t\t";
+  protected final String TEXT_77 = ".";
+  protected final String TEXT_78 = " = null;" + NL + "\t\t\t\t}" + NL + "\t\t\t\t" + NL + "\t\t\t\t";
+  protected final String TEXT_79 = NL + "\t\t\t" + NL + "\t\t\tnb_line_";
+  protected final String TEXT_80 = "++;";
+
+  public String generate(Object argument)
+  {
+    final StringBuffer stringBuffer = new StringBuffer();
+    stringBuffer.append(TEXT_1);
+    stringBuffer.append(TEXT_2);
+    
+	CodeGeneratorArgument codeGenArgument = (CodeGeneratorArgument) argument;
+	INode node = (INode)codeGenArgument.getArgument();
+	
+	String cid = node.getUniqueName();
+
+    stringBuffer.append(TEXT_3);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_4);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_5);
+    		
+		String host = ElementParameterParser.getValue(node, "__HOST__");
+		String port = ElementParameterParser.getValue(node, "__PORT__");
+		String db =   ElementParameterParser.getValue(node, "__DBNAME__");
+		String user = ElementParameterParser.getValue(node, "__USER__");
+		String password = ElementParameterParser.getValue(node, "__PASS__");
+		String vertexType = ElementParameterParser.getValue(node, "__VERTEXTYPE__");
+		
+    stringBuffer.append(TEXT_6);
+    stringBuffer.append(host);
+    stringBuffer.append(TEXT_7);
+    stringBuffer.append(port);
+    stringBuffer.append(TEXT_8);
+    stringBuffer.append(db);
+    stringBuffer.append(TEXT_9);
+    stringBuffer.append(user);
+    stringBuffer.append(TEXT_10);
+    stringBuffer.append(password);
+    stringBuffer.append(TEXT_11);
+    stringBuffer.append(vertexType);
+    stringBuffer.append(TEXT_12);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_13);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_14);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_15);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_16);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_17);
+    
+	List<IMetadataTable> metadatas = node.getMetadataList();
+	
+	if ((metadatas!=null)&&(metadatas.size()>0)) {
+		
+		IMetadataTable metadata = metadatas.get(0);
+		
+		List<IMetadataColumn> listColumns = metadata.getListColumns();
+		List< ? extends IConnection> conns = node.getOutgoingConnections();
+		
+		
+    stringBuffer.append(TEXT_18);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_19);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_20);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_21);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_22);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_23);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_24);
+    		
+			//The first connection
+			IConnection conn = conns.get(0);
+			
+			if (conn.getLineStyle().hasConnectionCategory(IConnectionCategory.DATA))
+			{
+				for (IMetadataColumn column : metadata.getListColumns()) {
+				
+    stringBuffer.append(TEXT_25);
+    
+					String ctype = column.getTalendType();
+				
+    stringBuffer.append(TEXT_26);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_27);
+    stringBuffer.append(column.getLabel());
+    stringBuffer.append(TEXT_28);
+    	
+				if(ctype.equals("id_String"))
+				{
+				
+    stringBuffer.append(TEXT_29);
+    stringBuffer.append(conn.getName());
+    stringBuffer.append(TEXT_30);
+    stringBuffer.append(column.getLabel());
+    stringBuffer.append(TEXT_31);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_32);
+    stringBuffer.append(column.getLabel());
+    stringBuffer.append(TEXT_33);
+    
+				}
+				
+    stringBuffer.append(TEXT_34);
+    
+				if(ctype.equals("id_Long"))
+				{
+				
+    stringBuffer.append(TEXT_35);
+    stringBuffer.append(conn.getName());
+    stringBuffer.append(TEXT_36);
+    stringBuffer.append(column.getLabel());
+    stringBuffer.append(TEXT_37);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_38);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_39);
+    stringBuffer.append(column.getLabel());
+    stringBuffer.append(TEXT_40);
+    
+				}
+				
+    stringBuffer.append(TEXT_41);
+    
+				if(ctype.equals("id_Double"))
+				{
+				
+    stringBuffer.append(TEXT_42);
+    stringBuffer.append(conn.getName());
+    stringBuffer.append(TEXT_43);
+    stringBuffer.append(column.getLabel());
+    stringBuffer.append(TEXT_44);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_45);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_46);
+    stringBuffer.append(column.getLabel());
+    stringBuffer.append(TEXT_47);
+    
+				}
+				
+    stringBuffer.append(TEXT_48);
+    
+				if(ctype.equals("id_Integer"))
+				{
+				
+    stringBuffer.append(TEXT_49);
+    stringBuffer.append(conn.getName());
+    stringBuffer.append(TEXT_50);
+    stringBuffer.append(column.getLabel());
+    stringBuffer.append(TEXT_51);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_52);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_53);
+    stringBuffer.append(column.getLabel());
+    stringBuffer.append(TEXT_54);
+    
+				}
+				
+    stringBuffer.append(TEXT_55);
+    
+				if(ctype.equals("id_Date"))
+				{
+				
+    stringBuffer.append(TEXT_56);
+    stringBuffer.append(conn.getName());
+    stringBuffer.append(TEXT_57);
+    stringBuffer.append(column.getLabel());
+    stringBuffer.append(TEXT_58);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_59);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_60);
+    stringBuffer.append(column.getLabel());
+    stringBuffer.append(TEXT_61);
+    
+				}
+				
+    stringBuffer.append(TEXT_62);
+    
+				if(ctype.equals("id_Float"))
+				{
+				
+    stringBuffer.append(TEXT_63);
+    stringBuffer.append(conn.getName());
+    stringBuffer.append(TEXT_64);
+    stringBuffer.append(column.getLabel());
+    stringBuffer.append(TEXT_65);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_66);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_67);
+    stringBuffer.append(column.getLabel());
+    stringBuffer.append(TEXT_68);
+    
+				}
+				
+    stringBuffer.append(TEXT_69);
+    
+				if(ctype.equals("id_Boolean"))
+				{
+				
+    stringBuffer.append(TEXT_70);
+    stringBuffer.append(conn.getName());
+    stringBuffer.append(TEXT_71);
+    stringBuffer.append(column.getLabel());
+    stringBuffer.append(TEXT_72);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_73);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_74);
+    stringBuffer.append(column.getLabel());
+    stringBuffer.append(TEXT_75);
+    
+				}
+				
+    stringBuffer.append(TEXT_76);
+    stringBuffer.append(conn.getName());
+    stringBuffer.append(TEXT_77);
+    stringBuffer.append(column.getLabel());
+    stringBuffer.append(TEXT_78);
+    
+				}
+			}
+			
+    stringBuffer.append(TEXT_79);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_80);
+    
+	}
+
+    return stringBuffer.toString();
+  }
+}

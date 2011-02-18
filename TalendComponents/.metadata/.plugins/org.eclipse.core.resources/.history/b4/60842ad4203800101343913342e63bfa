@@ -1,0 +1,25 @@
+package de.sones.talend.helper;
+
+public class LitHelper {
+
+	public String remove(String text)
+	{
+		String result = "";
+		
+		if (text.contains("'"))
+		{
+			
+			result = text.trim();
+			
+			
+		}
+		else
+		{
+			result = text;
+		}
+		
+		return result;
+	}
+	
+	
+}

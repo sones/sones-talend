@@ -1,0 +1,126 @@
+import org.talend.core.model.process.INode;
+import org.talend.core.model.process.ElementParameterParser;
+import org.talend.core.model.metadata.IMetadataTable;
+import org.talend.core.model.metadata.IMetadataColumn;
+import org.talend.core.model.process.IConnection;
+import org.talend.core.model.process.IConnectionCategory;
+import org.talend.designer.codegen.config.CodeGeneratorArgument;
+import org.talend.core.model.metadata.types.JavaTypesManager;
+import org.talend.core.model.metadata.types.JavaType;
+import java.util.List;
+import java.util.Map;
+
+public class CLASS
+{
+  protected static String nl;
+  public static synchronized CLASS create(String lineSeparator)
+  {
+    nl = lineSeparator;
+    CLASS result = new CLASS();
+    nl = null;
+    return result;
+  }
+
+  public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
+  protected final String TEXT_1 = NL;
+  protected final String TEXT_2 = NL + "\t\t\t\tsones_";
+  protected final String TEXT_3 = ".resetInsertStmt();" + NL + "\t\t\t\tsones_";
+  protected final String TEXT_4 = ".setInsertStmtVertexType();" + NL + "\t\t\t\t" + NL + "\t\t\t\t";
+  protected final String TEXT_5 = NL + "\t\t\t\t\t\t\t\t\t" + NL + "\t\t\t\t\tString ctype_";
+  protected final String TEXT_6 = " = \"";
+  protected final String TEXT_7 = "\";" + NL + "\t\t\t\t\tString clabel_";
+  protected final String TEXT_8 = " = \"";
+  protected final String TEXT_9 = "\";" + NL + "\t\t\t\t\tString value_";
+  protected final String TEXT_10 = " = null;" + NL + "\t\t\t\t" + NL + "\t\t\t\t\tif(";
+  protected final String TEXT_11 = ".";
+  protected final String TEXT_12 = " != null) {" + NL + "\t\t\t\t\t\tvalue_";
+  protected final String TEXT_13 = " = \"\" + ";
+  protected final String TEXT_14 = ".";
+  protected final String TEXT_15 = ";" + NL + "\t\t\t\t\t}" + NL + "\t\t\t\t\t" + NL + "\t\t\t\t\tsones_";
+  protected final String TEXT_16 = ".addInsertStmtAttr(clabel_";
+  protected final String TEXT_17 = ", value_";
+  protected final String TEXT_18 = ", ctype_";
+  protected final String TEXT_19 = ");\t\t\t\t" + NL + "\t\t\t\t";
+  protected final String TEXT_20 = NL + "\t\t\t\t" + NL + "\t\t\t\tsones_";
+  protected final String TEXT_21 = ".doInsert();\t\t" + NL + "\t\t\t\tsones_";
+  protected final String TEXT_22 = ".printInsert();" + NL + "\t\t\t\t" + NL + "\t\t\t\tnb_line_";
+  protected final String TEXT_23 = "++;" + NL + "" + NL + "\t\t\t";
+
+  public String generate(Object argument)
+  {
+    final StringBuffer stringBuffer = new StringBuffer();
+     
+    CodeGeneratorArgument codeGenArgument = (CodeGeneratorArgument) argument;
+    INode node = (INode)codeGenArgument.getArgument();
+    String cid = node.getUniqueName();	
+
+    stringBuffer.append(TEXT_1);
+    
+	List<IMetadataTable> metadatas = node.getMetadataList();
+	
+	if ((metadatas!=null)&&(metadatas.size()>0)) {
+		
+		IMetadataTable metadata = metadatas.get(0);		
+		List< ? extends IConnection> conns = node.getIncomingConnections();
+		
+			//The first connection
+			IConnection conn = conns.get(0);
+			
+			if (conn.getLineStyle().hasConnectionCategory(IConnectionCategory.DATA))
+			{
+			
+    stringBuffer.append(TEXT_2);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_3);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_4);
+    			
+				for (IMetadataColumn column : metadata.getListColumns()) {
+				
+				
+    stringBuffer.append(TEXT_5);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_6);
+    stringBuffer.append(column.getTalendType());
+    stringBuffer.append(TEXT_7);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_8);
+    stringBuffer.append(column.getLabel());
+    stringBuffer.append(TEXT_9);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_10);
+    stringBuffer.append(conn.getName() );
+    stringBuffer.append(TEXT_11);
+    stringBuffer.append(column.getLabel() );
+    stringBuffer.append(TEXT_12);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_13);
+    stringBuffer.append(conn.getName());
+    stringBuffer.append(TEXT_14);
+    stringBuffer.append(column.getLabel());
+    stringBuffer.append(TEXT_15);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_16);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_17);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_18);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_19);
+    
+				}
+				
+    stringBuffer.append(TEXT_20);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_21);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_22);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_23);
+    	
+			}
+	}
+		
+    return stringBuffer.toString();
+  }
+}

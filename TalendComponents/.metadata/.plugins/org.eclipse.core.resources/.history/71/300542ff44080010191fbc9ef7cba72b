@@ -1,0 +1,95 @@
+import org.talend.core.model.process.INode;
+import org.talend.core.model.process.ElementParameterParser;
+import org.talend.core.model.metadata.IMetadataTable;
+import org.talend.core.model.metadata.IMetadataColumn;
+import org.talend.core.model.process.IConnection;
+import org.talend.core.model.process.IConnectionCategory;
+import org.talend.core.model.metadata.types.JavaTypesManager;
+import org.talend.core.model.metadata.types.JavaType;
+import org.talend.designer.codegen.config.CodeGeneratorArgument;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.List;
+
+public class tSonesInputTest
+{
+  protected static String nl;
+  public static synchronized tSonesInputTest create(String lineSeparator)
+  {
+    nl = lineSeparator;
+    tSonesInputTest result = new tSonesInputTest();
+    nl = null;
+    return result;
+  }
+
+  public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
+  protected final String TEXT_1 = "";
+  protected final String TEXT_2 = " " + NL + "" + NL + "" + NL + "int nb_line_";
+  protected final String TEXT_3 = " = 0;" + NL;
+  protected final String TEXT_4 = NL + "\t\t\t\t\t";
+  protected final String TEXT_5 = ".";
+  protected final String TEXT_6 = " = row.get(\"";
+  protected final String TEXT_7 = "\");" + NL + "\t\t\t\t";
+  protected final String TEXT_8 = "++;" + NL + "\t\t}" + NL + "%>" + NL;
+
+  public String generate(Object argument)
+  {
+    final StringBuffer stringBuffer = new StringBuffer();
+    stringBuffer.append(TEXT_1);
+    
+	CodeGeneratorArgument codeGenArgument = (CodeGeneratorArgument) argument;
+	INode node = (INode)codeGenArgument.getArgument();
+	
+	String cid = node.getUniqueName();
+	
+	//To store the values
+	List<Map<String, String>> values = new List<Map<String, String>>();
+	
+	HashMap<String, String> oneRow = new HashMap<String, String>();
+	oneRow.put("COL1", "Hello");
+    oneRow.put("COL2", "World");
+	
+	values.add(oneRow);
+
+    stringBuffer.append(TEXT_2);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_3);
+    
+	List<IMetadataTable> metadatas = node.getMetadataList();
+	
+	if ((metadatas!=null)&&(metadatas.size()>0)) {
+		
+		IMetadataTable metadata = metadatas.get(0);
+		
+		List<IMetadataColumn> listColumns = metadata.getListColumns();
+		List< ? extends IConnection> conns = node.getOutgoingConnections();
+		
+		for (int i=0; i<values.size(); i++) {
+		
+			Map<String, String> row = values.get(i);
+
+			IConnection conn = conns.get(i);
+			
+			if (conn.getLineStyle().hasConnectionCategory(IConnectionCategory.DATA)
+			{
+				for (IMetadataColumn column: metadata.getListColumns()) {
+				
+    stringBuffer.append(TEXT_4);
+    stringBuffer.append(conn.getName() );
+    stringBuffer.append(TEXT_5);
+    stringBuffer.append(column.getLabel());
+    stringBuffer.append(TEXT_6);
+    stringBuffer.append(column.getLabel());
+    stringBuffer.append(TEXT_7);
+    
+				}
+			}
+			
+			nb_line_<%=cid 
+    stringBuffer.append(TEXT_8);
+    
+	}
+
+    return stringBuffer.toString();
+  }
+}

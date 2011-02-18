@@ -1,0 +1,109 @@
+import org.talend.core.model.process.INode;
+import org.talend.core.model.process.ElementParameterParser;
+import org.talend.core.model.metadata.IMetadataTable;
+import org.talend.core.model.metadata.IMetadataColumn;
+import org.talend.core.model.process.IConnection;
+import org.talend.core.model.process.IConnectionCategory;
+import org.talend.core.model.metadata.types.JavaTypesManager;
+import org.talend.core.model.metadata.types.JavaType;
+import org.talend.designer.codegen.config.CodeGeneratorArgument;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
+
+public class CLASS
+{
+  protected static String nl;
+  public static synchronized CLASS create(String lineSeparator)
+  {
+    nl = lineSeparator;
+    CLASS result = new CLASS();
+    nl = null;
+    return result;
+  }
+
+  public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
+  protected final String TEXT_1 = "/*" + NL + " * sones GraphDB - OpenSource Graph Database - http://www.sones.com" + NL + " * Copyright (C) 2007-2011 sones GmbH" + NL + " *" + NL + " * This file is part of sones GraphDB OpenSource Edition." + NL + " *" + NL + " * sones GraphDB OSE is free software: you can redistribute it and/or modify" + NL + " * it under the terms of the GNU Affero General Public License as published by" + NL + " * the Free Software Foundation, version 3 of the License." + NL + " *" + NL + " * sones GraphDB OSE is distributed in the hope that it will be useful," + NL + " * but WITHOUT ANY WARRANTY; without even the implied warranty of" + NL + " * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the" + NL + " * GNU Affero General Public License for more details." + NL + " *" + NL + " * You should have received a copy of the GNU Affero General Public License" + NL + " * along with sones GraphDB OSE. If not, see <http://www.gnu.org/licenses/>." + NL + " */" + NL + " ";
+  protected final String TEXT_2 = NL;
+  protected final String TEXT_3 = " " + NL + "" + NL + "class Sones_";
+  protected final String TEXT_4 = NL + "{" + NL + "\t/**" + NL + "\t * To successivly build the insert statement" + NL + "\t */" + NL + "\tprivate StringBuilder insert =  new StringBuilder();" + NL + "\t\t" + NL + "\t/**" + NL + "\t * To temp. store the attribute names" + NL + "\t */" + NL + "\tprivate java.util.ArrayList<String> tmpAttrNames = new java.util.ArrayList<String>();\t" + NL + "\t" + NL + "\t\t" + NL + "\t/**" + NL + "     * Reset the INSERT statement by beginning with INSERT INTO" + NL + "     */\t " + NL + "\tpublic void resetInsertStmt()" + NL + "\t{" + NL + "\t\tthis.insert = new StringBuilder(\"INSERT INTO \");" + NL + "\t\tthis.tmpAttrNames = new java.util.ArrayList<String>();" + NL + "\t}" + NL + "\t" + NL + "\t/**" + NL + "\t * Get the choosen vertex type and then append it to the INSERT statement" + NL + "\t */" + NL + "\tpublic void setInsertStmtVertexType()" + NL + "\t{" + NL + "\t\t";
+  protected final String TEXT_5 = NL + "\t" + NL + "\t\tthis.insert.append(\"";
+  protected final String TEXT_6 = "\");" + NL + "\t}" + NL + "\t" + NL + "\t/**" + NL + "\t * Get the number of attributes and decide based on it how the attribute name and value should be appended to the INSERT statement." + NL + "\t */" + NL + "\tpublic void addInsertStmtAttr(String attrName, String attrVal, String type)" + NL + "\t{" + NL + "\t\t";
+  protected final String TEXT_7 = NL + "\t\t" + NL + "\t\tint numOfAttr = ";
+  protected final String TEXT_8 = "; " + NL + "\t" + NL + "\t\tthis.tmpAttrNames.add(attrName);" + NL + "\t\t" + NL + "" + NL + "\t\tif (tmpAttrNames.size()==1)" + NL + "\t\t{" + NL + "\t\t\tinsert.append(\" VALUES\" + \" (\");" + NL + "\t\t}" + NL + "\t\t" + NL + "\t\tif (attrVal != null)" + NL + "\t\t{" + NL + "\t\t\tif (tmpAttrNames.size()==1)" + NL + "\t\t\t{" + NL + "\t\t\t\tinsert.append(attrName + \"=\" + litAttrVal(attrVal, type));" + NL + "\t\t\t}" + NL + "\t\t\telse" + NL + "\t\t\t{" + NL + "\t\t\t\tinsert.append(\", \" + attrName + \"=\" + litAttrVal(attrVal, type));" + NL + "\t\t\t}" + NL + "\t\t}" + NL + "\t\t" + NL + "\t\tif (tmpAttrNames.size()==numOfAttr)" + NL + "\t\t{" + NL + "\t\t\tinsert.append(\")\");" + NL + "\t\t}" + NL + "\t}" + NL + "\t" + NL + "\t/**" + NL + "\t * Encapsulate the given attribute value by the right literals." + NL + "\t */" + NL + "\tprivate String litAttrVal(String attrVal, String type)" + NL + "\t{\t" + NL + "\t\tString quote = new de.sones.talend.helper.TypeHelper().getTypeToLitMap.get(type);" + NL + "\t" + NL + "\t\treturn  qoute + attrVal + quote;" + NL + "\t}" + NL + "\t" + NL + "\t/**" + NL + "\t * Print the INSERT statement" + NL + "\t */ " + NL + "\tpublic void printInsert()" + NL + "\t{" + NL + "\t\tString insertStr = this.insert.toString();" + NL + "\t\t" + NL + "\t\tSystem.out.println(insertStr);" + NL + "\t}" + NL + "\t" + NL + "\t/**" + NL + "\t * Perform the INSERT statement" + NL + "\t */" + NL + "\tpublic void doInsert()" + NL + "\t{" + NL + "\t\tString insertStr = this.insert.toString();" + NL + "\t\t" + NL + "\t\t";
+  protected final String TEXT_9 = "\t\t" + NL + "\t\t\t\t" + NL + "\t\tde.sones.talend.helper.LitHelper litHelper = new de.sones.talend.helper.LitHelper();\t\t" + NL + "\t\t\t" + NL + "\t\tString host = litHelper.trimSingleQuote(\"";
+  protected final String TEXT_10 = "\");" + NL + "\t\tString port = litHelper.trimSingleQuote(\"";
+  protected final String TEXT_11 = "\");" + NL + "\t\tString db = litHelper.trimSingleQuote(\"";
+  protected final String TEXT_12 = "\");" + NL + "\t\tString user  = litHelper.trimSingleQuote(\"";
+  protected final String TEXT_13 = "\");" + NL + "\t\tString password  = litHelper.trimSingleQuote(\"";
+  protected final String TEXT_14 = "\");" + NL + "\t" + NL + "\t\t" + NL + "\t\ttry {" + NL + "\t\t\t" + NL + "\t\t\tjava.net.URI uri = new java.net.URI(\"http://\" + host + \":\" + port);" + NL + "\t\t\t" + NL + "\t\t\tde.sones.GraphDSJavaClient.GraphDSJavaClient restClient = new de.sones.GraphDSJavaClient.GraphDSJavaClient(uri,user,password);" + NL + "\t\t\t\t\t\t" + NL + "\t\t\tde.sones.GraphDSJavaClient.Result.QueryResult result  = restClient.query(insertStr);" + NL + "\t\t\t" + NL + "\t\t\tif (result.getErrors().size() != 0)" + NL + "\t\t\t{" + NL + "\t\t\t\tfor(de.sones.GraphDSJavaClient.Errors.IError error : result.getErrors())" + NL + "\t\t\t\t{" + NL + "\t\t\t\t\tSystem.err.println(error.getMessage());" + NL + "\t\t\t\t}" + NL + "\t\t\t}" + NL + "\t\t}" + NL + "\t\tcatch (Exception e)" + NL + "\t\t{" + NL + "\t\t\te.printStackTrace();" + NL + "\t\t}\t" + NL + "\t}" + NL + "}" + NL + "" + NL + "" + NL + "Sones_";
+  protected final String TEXT_15 = " sones_";
+  protected final String TEXT_16 = " = new Sones_";
+  protected final String TEXT_17 = "();" + NL + "" + NL + "int nb_line_";
+  protected final String TEXT_18 = " = 0;";
+
+  public String generate(Object argument)
+  {
+    final StringBuffer stringBuffer = new StringBuffer();
+    stringBuffer.append(TEXT_1);
+    stringBuffer.append(TEXT_2);
+    
+	CodeGeneratorArgument codeGenArgument = (CodeGeneratorArgument) argument;
+	INode node = (INode)codeGenArgument.getArgument();
+	
+	String cid = node.getUniqueName();
+
+    stringBuffer.append(TEXT_3);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_4);
+    
+		String vertexType = ElementParameterParser.getValue(node, "__VERTEXTYPE__");
+		
+    stringBuffer.append(TEXT_5);
+    stringBuffer.append(vertexType);
+    stringBuffer.append(TEXT_6);
+    	
+		int numOfAttr = 0;
+		
+		List<IMetadataTable> metadatas = node.getMetadataList();
+		
+		if ((metadatas!=null)&&(metadatas.size()>0)) {
+		
+			IMetadataTable metadata = metadatas.get(0);
+			
+			numOfAttr = metadata.getListColumns().size();	
+		}			
+		
+    stringBuffer.append(TEXT_7);
+    stringBuffer.append(numOfAttr);
+    stringBuffer.append(TEXT_8);
+    		
+		String host = ElementParameterParser.getValue(node, "__HOST__");
+		String port = ElementParameterParser.getValue(node, "__PORT__");
+		String db =   ElementParameterParser.getValue(node, "__DBNAME__");
+		String user = ElementParameterParser.getValue(node, "__USER__");
+		String password = ElementParameterParser.getValue(node, "__PASS__");
+		
+    stringBuffer.append(TEXT_9);
+    stringBuffer.append(host);
+    stringBuffer.append(TEXT_10);
+    stringBuffer.append(port);
+    stringBuffer.append(TEXT_11);
+    stringBuffer.append(db);
+    stringBuffer.append(TEXT_12);
+    stringBuffer.append(user);
+    stringBuffer.append(TEXT_13);
+    stringBuffer.append(password);
+    stringBuffer.append(TEXT_14);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_15);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_16);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_17);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_18);
+    return stringBuffer.toString();
+  }
+}

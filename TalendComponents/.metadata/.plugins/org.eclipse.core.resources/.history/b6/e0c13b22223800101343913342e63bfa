@@ -1,0 +1,33 @@
+package de.sones.talend.helper;
+
+/**
+ * This class helps to handle literal symbols in the input which was passed by the input form of a Talend component
+ * 
+ * @author david.maier@sones.de
+ *
+ */
+public class LitHelper {
+
+	/**
+	 * Gets the text which was encapsulated by single quotes. So if you passed "'text'" then the result is just "text". If the text does not not start and end with a
+	 * single qoute then the result is just the text itself.
+	 * @param text
+	 * @return
+	 */
+	public String trimSingleQuote(String text)
+	{
+		String result = text.trim();
+					
+		if (result.startsWith("'") && result.endsWith("'"))
+		{	
+				result = result.substring(1);
+				result = result.substring(0, result.length()-1);
+		}
+		else
+		{
+			result = text;
+		}
+		
+		return result;
+	}
+}

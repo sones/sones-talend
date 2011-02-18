@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Move 4 elements to &apos;tSonesInput&apos;&#x0D;&#x0A;- Original project: &apos;TalendCompDef&apos;&#x0D;&#x0A;- Destination element: &apos;tSonesInput&apos;&#x0D;&#x0A;- Original elements:&#x0D;&#x0A;     tSonesInput_java.xml&#x0D;&#x0A;     tSonesInput_messages.properties&#x0D;&#x0A;     tSonesInput_icon32.png&#x0D;&#x0A;     tSonesInput_icon32.xcf&#x0D;&#x0A;- Update references to refactored element" description="Move files" element1="tSonesInput_java.xml" element2="tSonesInput_messages.properties" element3="tSonesInput_icon32.png" element4="tSonesInput_icon32.xcf" files="4" flags="589830" folders="0" id="org.eclipse.jdt.ui.move" policy="org.eclipse.jdt.ui.moveResources" qualified="false" references="true" stamp="1298020087727" target="tSonesInput" units="0" version="1.0"/>
+</session>

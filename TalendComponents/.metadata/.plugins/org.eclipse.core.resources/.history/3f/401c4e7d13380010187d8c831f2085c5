@@ -1,0 +1,162 @@
+package de.sones.talend.helper;
+
+public class TSonesInputHelper {
+
+	//To store the values
+	private java.util.ArrayList<java.util.HashMap<String, String>> values = new java.util.ArrayList<java.util.HashMap<String, String>>();		
+	private int counter  = 0;
+
+	//Some parameters
+	
+	
+	
+	public TSonesInputHelper(String host, String port, String db, String user, String password, String vertexType)
+	{
+		genValues(host, port, db, user, password, vertexType);
+	}
+
+	public void genTestValues()
+	{
+			java.util.HashMap<String, String> firstRow = new java.util.HashMap<String, String>();
+			firstRow.put("COL1", "Hello");
+			firstRow.put("COL2", "World");
+
+			java.util.HashMap<String, String> secondRow = new java.util.HashMap<String, String>();
+			secondRow.put("COL1", "Hello again");
+			secondRow.put("COL2", "World again");
+
+			java.util.HashMap<String, String> thirdRow = new java.util.HashMap<String, String>();
+			thirdRow.put("COL1", "Hello again again");
+			thirdRow.put("COL2", "World again again");
+
+			this.values.add(firstRow);
+			this.values.add(secondRow);
+			this.values.add(thirdRow);
+	}
+	
+	public void genValues(String host, String port, String db, String user, String password, String vertexType)
+	{
+		
+	this.values = new java.util.ArrayList<java.util.HashMap<String, String>>();
+
+	try {
+		
+		java.net.URI uri = new java.net.URI("http://" + host + ":" + port);
+		
+		de.sones.GraphDSJavaClient.GraphDSJavaClient restClient = new de.sones.GraphDSJavaClient.GraphDSJavaClient(uri,user,password);
+		
+		String queryStr = "FROM " + vertexType + " SELECT *";
+		
+		de.sones.GraphDSJavaClient.Result.QueryResult result  = restClient.query(queryStr);
+		
+		if (result.getErrors().size() == 0)
+		{
+			for (de.sones.GraphDSJavaClient.API.IVertex vertex : result.getVertices())
+			{	
+				java.util.HashMap<String, String> row = new java.util.HashMap<String, String>();
+				
+				for (java.util.Map.Entry<String, Object> attribute : vertex.getAttributes().entrySet())
+				{
+					boolean isSimpleAttr = (!(attribute.getValue() instanceof de.sones.GraphDSJavaClient.API.Edge)) &&
+					                       (!(attribute.getValue() instanceof de.sones.GraphDSJavaClient.DataStructures.ObjectUUID)) &&
+					                       (!(attribute.getValue() instanceof de.sones.GraphDSJavaClient.DataStructures.ObjectRevisionID))
+					                       ;
+					
+					if (isSimpleAttr)
+					{
+						String attributeName = attribute.getKey();		
+						String attributeValue = "" + attribute.getValue();
+						
+						row.put(attributeName, attributeValue);
+						
+					}		
+				}
+			
+				this.values.add(row);
+			}
+		}
+		else
+		{
+			for(de.sones.GraphDSJavaClient.Errors.IError error : result.getErrors())
+			{
+				System.err.println(error.getMessage());
+			}
+		}
+	}
+	catch (Exception e)
+	{
+		e.printStackTrace();
+	}	
+}
+	
+	
+	
+	
+	public java.util.HashMap<String,String> getNextRow()
+	{
+		java.util.HashMap<String,String> result = null;
+		
+		result = this.values.get(this.counter);
+		
+		if (this.counter < values.size() - 1)
+		{
+			this.counter++;			
+		}
+		
+		return result;
+	}
+	
+	public java.util.ArrayList<java.util.HashMap<String, String>> getValues()
+	{
+		return this.values;
+	}
+	
+	
+	//Sones supports Integer, Double, String, Boolean and DateTime
+	
+	public int strToInt(String value)
+	{
+		return Integer.valueOf(value).intValue();
+	}
+
+	public long strToLong(String value)
+	{
+		return Long.valueOf(value).longValue();
+	}
+
+	public float strToFloat(String value)
+	{
+		return Float.valueOf(value).floatValue();
+	}
+
+	public double strToDouble(String value)
+	{
+		return Double.valueOf(value).doubleValue();
+	}
+
+	public boolean strToBoolean(String value)
+	{
+		return Boolean.valueOf(value).booleanValue();
+	}
+
+	public java.util.Date strToDate(String value)
+	{
+		java.util.Date result = new java.util.Date();
+	
+		//The format is like: Fri Dec 24 00:00:00 CET 2010
+		java.text.SimpleDateFormat format = new java.text.SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
+	
+		try {
+		
+			result = format.parse(value);
+		}
+		catch (Exception e)
+		{
+			System.err.println("Could not parse date value.");
+		}
+	
+		return result; 	
+	}
+	
+	
+}

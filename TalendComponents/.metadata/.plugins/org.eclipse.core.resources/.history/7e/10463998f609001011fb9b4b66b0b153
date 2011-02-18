@@ -1,0 +1,36 @@
+package de.sones.talend;
+
+import java.util.HashMap;
+
+import de.sones.talend.input.Helper;
+
+public class Main {
+
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		
+	
+		//Test the data input functionality
+		/*
+		de.sones.talend.input.Helper helper = new de.sones.talend.input.Helper();
+		
+		for (int i = 0; i < helper.getValues().size(); i++) {
+		
+			HashMap<String,String> row = helper.getNextRow();
+			
+			System.out.println(row.toString());
+		}
+		*/
+		
+		//Test the data output functionality
+		de.sones.talend.output.Helper outHelpr = new de.sones.talend.output.Helper();
+		
+		outHelpr.resetInsertStmt();
+		outHelpr.setInsertStmtVertex("Test");
+		outHelpr.addInsertStmtAttr("id", "Hello", "id_String");
+		outHelpr.addInsertStmtAttr("date", "06.12.2010", "id_Date");
+	}
+
+}

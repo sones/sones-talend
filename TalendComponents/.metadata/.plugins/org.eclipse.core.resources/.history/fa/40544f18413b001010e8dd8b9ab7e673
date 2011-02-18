@@ -1,0 +1,285 @@
+<%@ jet
+/*
+ * sones GraphDB - OpenSource Graph Database - http://www.sones.com
+ * Copyright (C) 2007-2011 sones GmbH
+ *
+ * This file is part of sones GraphDB OpenSource Edition.
+ *
+ * sones GraphDB OSE is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, version 3 of the License.
+ *
+ * sones GraphDB OSE is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with sones GraphDB OSE. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
+
+imports="
+		org.talend.core.model.process.INode 
+		org.talend.core.model.process.ElementParameterParser 
+		org.talend.core.model.metadata.IMetadataTable 
+		org.talend.core.model.metadata.IMetadataColumn
+		org.talend.core.model.process.IConnection
+		org.talend.core.model.process.IConnectionCategory
+		org.talend.core.model.metadata.types.JavaTypesManager
+		org.talend.core.model.metadata.types.JavaType 
+		org.talend.designer.codegen.config.CodeGeneratorArgument
+		java.util.Map
+		java.util.HashMap
+		java.util.List
+		java.util.ArrayList
+	" 
+%>
+
+<%
+	CodeGeneratorArgument codeGenArgument = (CodeGeneratorArgument) argument;
+	INode node = (INode)codeGenArgument.getArgument();
+	
+	String cid = node.getUniqueName();
+%> 
+
+
+	class Sones_<%=cid%>
+	{
+		/**
+		 * We previously gather all values and store them in this 'table'. We do this because via REST a 'FROM ${Vertex type} SELECT *' always returns the whole result set.
+		 */
+		private java.util.ArrayList<java.util.HashMap<String, String>> values = new java.util.ArrayList<java.util.HashMap<String, String>>();		
+		private int counter  = 0;
+	
+		public Sones_<%=cid%>()
+		{
+			genValues();
+		}
+
+	    /**
+		 * To fill the values 'table' with data. 
+		 */
+		public void genValues()
+		{
+			
+		this.values = new java.util.ArrayList<java.util.HashMap<String, String>>();
+				
+		<%		
+		String host = ElementParameterParser.getValue(node, "__HOST__");
+		String port = ElementParameterParser.getValue(node, "__PORT__");
+		String db =   ElementParameterParser.getValue(node, "__DBNAME__");
+		String user = ElementParameterParser.getValue(node, "__USER__");
+		String password = ElementParameterParser.getValue(node, "__PASS__");
+		String vertexType = ElementParameterParser.getValue(node, "__VERTEXTYPE__");
+		%>		
+			
+		de.sones.talend.helper.LitHelper litHelper = new de.sones.talend.helper.LitHelper();
+		
+		String host = litHelper.trimSingleQuote("<%=host%>");
+		String port = litHelper.trimSingleQuote("<%=port%>");
+		//The Database property is not yet used
+		String db = litHelper.trimSingleQuote("<%=db%>");
+		String user  = litHelper.trimSingleQuote("<%=user%>");
+		String password  = litHelper.trimSingleQuote("<%=password%>");
+		String vertexType = litHelper.trimSingleQuote("<%=vertexType%>");
+	
+		try {
+			
+			java.net.URI uri = new java.net.URI("http://" + host + ":" + port);
+			
+			de.sones.GraphDSJavaClient.GraphDSJavaClient restClient = new de.sones.GraphDSJavaClient.GraphDSJavaClient(uri,user,password);
+			
+			String queryStr = "FROM " + vertexType + " SELECT *";
+			
+			de.sones.GraphDSJavaClient.Result.QueryResult result  = restClient.query(queryStr);
+			
+			if (result.getErrors().size() == 0)
+			{
+				for (de.sones.GraphDSJavaClient.API.IVertex vertex : result.getVertices())
+				{	
+					java.util.HashMap<String, String> row = new java.util.HashMap<String, String>();
+					
+					for (java.util.Map.Entry<String, Object> attribute : vertex.getAttributes().entrySet())
+					{
+						boolean isSimpleAttr = (!(attribute.getValue() instanceof de.sones.GraphDSJavaClient.API.Edge)) &&
+						                       (!(attribute.getValue() instanceof de.sones.GraphDSJavaClient.DataStructures.ObjectUUID)) &&
+						                       (!(attribute.getValue() instanceof de.sones.GraphDSJavaClient.DataStructures.ObjectRevisionID))
+						                       ;
+						
+						if (isSimpleAttr)
+						{
+							String attributeName = attribute.getKey();		
+							String attributeValue = "" + attribute.getValue();
+							
+							row.put(attributeName, attributeValue);
+							
+						}		
+					}
+				
+					this.values.add(row);
+				}
+			}
+			else
+			{
+				for(de.sones.GraphDSJavaClient.Errors.IError error : result.getErrors())
+				{
+					System.err.println(error.getMessage());
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}	
+	}
+		
+		
+		
+		/**
+		 * To get the next value from the 'values' table
+		 */
+		public java.util.HashMap<String,String> getNextRow()
+		{
+			java.util.HashMap<String,String> result = null;
+			
+			result = this.values.get(this.counter);
+			
+			if (this.counter < values.size() - 1)
+			{
+				this.counter++;			
+			}
+			
+			return result;
+		}
+		
+		/**
+		 * Getter for the 'values' table
+		 */
+		public java.util.ArrayList<java.util.HashMap<String, String>> getValues()
+		{
+			return this.values;
+		}
+	}
+
+Sones_<%=cid%> sones_<%=cid%> = new Sones_<%=cid%>();
+de.sones.talend.helper.TypeHelper helper_<%=cid%> = new de.sones.talend.helper.TypeHelper();
+
+int nb_line_<%=cid%> = 0;
+
+<%
+	List<IMetadataTable> metadatas = node.getMetadataList();
+	
+	if ((metadatas!=null)&&(metadatas.size()>0)) {
+		
+		IMetadataTable metadata = metadatas.get(0);
+		
+		List<IMetadataColumn> listColumns = metadata.getListColumns();
+		List< ? extends IConnection> conns = node.getOutgoingConnections();
+		
+		%>
+		
+		
+		for (int i_<%=cid%> = 0; i_<%=cid%> < sones_<%=cid%>.getValues().size(); i_<%=cid%>++) {		
+			
+			java.util.HashMap<String, String> row_<%=cid%> = sones_<%=cid%>.getNextRow();
+		
+		<%		
+			//The first connection
+			IConnection conn = conns.get(0);
+			
+			if (conn.getLineStyle().hasConnectionCategory(IConnectionCategory.DATA))
+			{
+				for (IMetadataColumn column : metadata.getListColumns()) {
+				%>		
+				
+				
+				<%
+					String ctype = column.getTalendType();
+				%>
+					
+				if (row_<%=cid%>.get("<%=column.getLabel()%>")!=null)
+				{
+				
+				<%	
+				if(ctype.equals("id_String"))
+				{
+				%>
+						<%=conn.getName()%>.<%=column.getLabel()%> = row_<%=cid%>.get("<%=column.getLabel()%>");					
+				<%
+				}
+				%>
+
+				<%
+				if(ctype.equals("id_Long"))
+				{
+				%>
+						<%=conn.getName()%>.<%=column.getLabel()%> = helper_<%=cid%>.strToLong(row_<%=cid%>.get("<%=column.getLabel()%>"));					
+				<%
+				}
+				%>
+								
+				<%
+				if(ctype.equals("id_Double"))
+				{
+				%>
+						<%=conn.getName()%>.<%=column.getLabel()%> = helper_<%=cid%>.strToDouble(row_<%=cid%>.get("<%=column.getLabel()%>"));					
+				<%
+				}
+				%>
+								
+				<%
+				if(ctype.equals("id_Integer"))
+				{
+				%>
+						<%=conn.getName()%>.<%=column.getLabel()%> = helper_<%=cid%>.strToInt(row_<%=cid%>.get("<%=column.getLabel()%>"));					
+				<%
+				}
+				%>
+				
+				
+				<%
+				if(ctype.equals("id_Date"))
+				{
+				%>
+						<%=conn.getName()%>.<%=column.getLabel()%> = helper_<%=cid%>.strToDate(row_<%=cid%>.get("<%=column.getLabel()%>"));					
+				<%
+				}
+				%>
+				
+
+				<%
+				if(ctype.equals("id_Float"))
+				{
+				%>
+						<%=conn.getName()%>.<%=column.getLabel()%> = helper_<%=cid%>.strToFloat(row_<%=cid%>.get("<%=column.getLabel()%>"));					
+				<%
+				}
+				%>
+				
+				
+				<%
+				if(ctype.equals("id_Boolean"))
+				{
+				%>
+						<%=conn.getName()%>.<%=column.getLabel()%> = helper_<%=cid%>.strToBoolean(row_<%=cid%>.get("<%=column.getLabel()%>"));					
+				<%
+				}
+				%>
+				
+				}
+				else
+				{
+					<%=conn.getName()%>.<%=column.getLabel()%> = null;
+				}
+				
+				<%
+				}
+			}
+			%>
+			
+			nb_line_<%=cid%>++;
+<%
+	}
+%>

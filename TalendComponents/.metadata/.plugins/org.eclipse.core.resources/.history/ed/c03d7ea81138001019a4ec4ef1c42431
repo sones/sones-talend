@@ -1,0 +1,310 @@
+import org.talend.core.model.process.INode;
+import org.talend.core.model.process.ElementParameterParser;
+import org.talend.core.model.metadata.IMetadataTable;
+import org.talend.core.model.metadata.IMetadataColumn;
+import org.talend.designer.codegen.config.CodeGeneratorArgument;
+import org.talend.core.model.process.IConnection;
+import org.talend.core.model.process.IConnectionCategory;
+import org.talend.core.model.metadata.builder.database.ExtractMetaDataUtils;
+import org.talend.core.model.metadata.types.JavaTypesManager;
+import org.talend.core.model.metadata.types.JavaType;
+
+public class CLASS
+{
+  protected static String nl;
+  public static synchronized CLASS create(String lineSeparator)
+  {
+    nl = lineSeparator;
+    CLASS result = new CLASS();
+    nl = null;
+    return result;
+  }
+
+  public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
+  protected final String TEXT_1 = NL;
+  protected final String TEXT_2 = NL + "\t\t\tString user_";
+  protected final String TEXT_3 = " = ";
+  protected final String TEXT_4 = ";" + NL + "\t\t    String password_";
+  protected final String TEXT_5 = " = ";
+  protected final String TEXT_6 = ";" + NL + "\t\t\tString url_";
+  protected final String TEXT_7 = " =  \"http://\" + ";
+  protected final String TEXT_8 = " + \":\" + ";
+  protected final String TEXT_9 = ";" + NL + "\t\t\t" + NL + "\t\t\tdsClient_";
+  protected final String TEXT_10 = " =  new GraphDSJavaClient(new URI(url_";
+  protected final String TEXT_11 = "), user_";
+  protected final String TEXT_12 = ", password_";
+  protected final String TEXT_13 = ");";
+  protected final String TEXT_14 = "\t" + NL;
+  protected final String TEXT_15 = " ";
+  protected final String TEXT_16 = NL;
+  protected final String TEXT_17 = NL + "int nb_line_";
+  protected final String TEXT_18 = " = 0;" + NL + "globalMap.put(";
+  protected final String TEXT_19 = "_QUERY,";
+  protected final String TEXT_20 = ");" + NL;
+  protected final String TEXT_21 = NL + "de.sones.GraphDSJavaClient dsClient_";
+  protected final String TEXT_22 = " = null;" + NL;
+  protected final String TEXT_23 = NL;
+  protected final String TEXT_24 = NL + NL + "QueryResult result_";
+  protected final String TEXT_25 = " = dsClient_";
+  protected final String TEXT_26 = ".query(";
+  protected final String TEXT_27 = NL + "routines.system.Dynamic dcg_";
+  protected final String TEXT_28 = " = new routines.system.Dynamic();" + NL;
+  protected final String TEXT_29 = NL + "//Pseude code" + NL + "foreach Attribute in the Vertex_Type_Definition" + NL + "{" + NL + "\t\troutines.system.DynamicMetadata dcm_";
+  protected final String TEXT_30 = "=new routines.system.DynamicMetadata();" + NL + "\t\tdcm_";
+  protected final String TEXT_31 = ".setName(${attribute name});" + NL + "\t\tdcm_";
+  protected final String TEXT_32 = ".setDbName(\"Sones\");" + NL + "\t\tdcm_";
+  protected final String TEXT_33 = ".setType(${mapSonesAttributeTypeToTalendType()});" + NL;
+  protected final String TEXT_34 = NL + "\t\tdcm_";
+  protected final String TEXT_35 = ".setDbType(${attributeType});" + NL + "\t\tdcm_";
+  protected final String TEXT_36 = ".setLength(${attributeTypeLenght});" + NL + "        dcm_";
+  protected final String TEXT_37 = ".setPrecision(${attributeTypePrecission});" + NL + "        dcm_";
+  protected final String TEXT_38 = ".setNullable(true);" + NL + "        dcm_";
+  protected final String TEXT_39 = ".setKey(false);" + NL + "        dcm_";
+  protected final String TEXT_40 = ".setColumnPosition(${pos});" + NL + "        dcm_";
+  protected final String TEXT_41 = ".setSourceType(DynamicMetadata.sourceTypes.database);" + NL + "        " + NL + "\t\tdcg_";
+  protected final String TEXT_42 = ".metadatas.add(dcm_";
+  protected final String TEXT_43 = ");" + NL + "}" + NL;
+  protected final String TEXT_44 = NL + NL + "String tmpContent_";
+  protected final String TEXT_45 = " = null;" + NL + "List< ? extends IConnection> conns = node.getOutgoingSortedConnections();" + NL + "" + NL + "//Pseude code" + NL + "foreach Vertex in Result" + NL + "{" + NL + "\tnb_line_";
+  protected final String TEXT_46 = "++;" + NL;
+  protected final String TEXT_47 = "\t" + NL + "\t\t" + NL + "\t\t//for each attribute of the vertex" + NL + "\t\tfor (routines.system.DynamicMetadata attribute : dcg_";
+  protected final String TEXT_48 = ".metadatas)" + NL + "\t\t{" + NL + "\t\t\t";
+  protected final String TEXT_49 = ".";
+  protected final String TEXT_50 = " = dcg_";
+  protected final String TEXT_51 = ";" + NL + "\t\t\t" + NL + "\t\t\tattribute.addColumnValue(${getAttributeValueOfVertex()});" + NL + "\t\t}" + NL + "\t\t" + NL + "" + NL + "\t\t//for each attribute of the vertex" + NL + "\t\t/* This would be the way without a dynamic schema. It means that we would assign  a String value to " + NL + "\t\tfor (routines.system.DynamicMetadata attribute : dcg_";
+  protected final String TEXT_52 = ".metadatas)" + NL + "\t\t{" + NL + "\t\t\t" + NL + "\t\t\ttmpContent_";
+  protected final String TEXT_53 = " = ${getAttributeValueOfVertex()}" + NL + "\t\t\t" + NL + "\t\t\tif(tmpContent_";
+  protected final String TEXT_54 = " != null) {" + NL + "\t\t\t\t";
+  protected final String TEXT_55 = ".";
+  protected final String TEXT_56 = " = tmpContent_";
+  protected final String TEXT_57 = ";" + NL + "            } else {";
+  protected final String TEXT_58 = NL + "                ";
+  protected final String TEXT_59 = ".";
+  protected final String TEXT_60 = " = null;" + NL + "            }" + NL + "\t\t}" + NL + "\t\t*/\t\t";
+  protected final String TEXT_61 = ".metadatas)" + NL + "\t\t\t\t\t{" + NL + "\t\t\t\t\t\t%>" + NL + "\t\t\t\t\t\t\t";
+  protected final String TEXT_62 = ".";
+  protected final String TEXT_63 = " = ";
+  protected final String TEXT_64 = ".";
+  protected final String TEXT_65 = ";" + NL + "\t\t\t\t\t\t";
+  protected final String TEXT_66 = NL + "}";
+  protected final String TEXT_67 = NL;
+
+  public String generate(Object argument)
+  {
+    final StringBuffer stringBuffer = new StringBuffer();
+    stringBuffer.append(TEXT_1);
+    -- THE HELPER CLASSES --
+    
+	class SonesInputBeginUtil {
+		
+		//The CID (Connection id?)
+		CodeGeneratorArgument codeGenArgument = (CodeGeneratorArgument) argument;
+		INode node = (INode)codeGenArgument.getArgument();
+		protected String cid = node.getUniqueName();
+		
+		protected String host;
+		protected String port;
+		protected String db;
+		protected String user;
+		protected String password;
+
+
+		/**
+		 * To initialize the connection
+		 */
+		public void createConnection(INode node)
+		{
+			//Get the parameters passed through the user interface of this component
+			host = ElementParameterParser.getValue(node, "__HOST__");
+			port = ElementParameterParser.getValue(node, "__PORT__");
+			db = ElementParameterParser.getValue(node, "__DBNAME__");
+			user = ElementParameterParser.getValue(node, "__USER__");
+			password = ElementParameterParser.getValue(node, "__PASS__");
+
+    stringBuffer.append(TEXT_2);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_3);
+    stringBuffer.append(user);
+    stringBuffer.append(TEXT_4);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_5);
+    stringBuffer.append(password);
+    stringBuffer.append(TEXT_6);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_7);
+    stringBuffer.append(host);
+    stringBuffer.append(TEXT_8);
+    stringBuffer.append(port);
+    stringBuffer.append(TEXT_9);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_10);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_11);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_12);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_13);
+    					
+		}
+		
+		/**
+		 * To get the query string
+		 */
+		public String getQueryString(INode node) {
+		
+			String dbquery= ElementParameterParser.getValue(node, "__QUERY__");
+			dbquery = dbquery.replaceAll("\n"," ");
+			dbquery = dbquery.replaceAll("\r"," ");
+			
+			return dbquery;
+		}
+		
+		
+		
+	}
+
+    stringBuffer.append(TEXT_14);
+    -- 1.) THE CODE GENERATOR --
+    stringBuffer.append(TEXT_15);
+    
+//Required variables
+CodeGeneratorArgument codeGenArgument = (CodeGeneratorArgument) argument;
+INode node = (INode)codeGenArgument.getArgument();
+String cid = node.getUniqueName();
+
+    stringBuffer.append(TEXT_16);
+    -- Later used to to get the number of affected lines, the query is also put into the globalMap. This allows that the next component can access this information --
+    stringBuffer.append(TEXT_17);
+    stringBuffer.append(cid );
+    stringBuffer.append(TEXT_18);
+    stringBuffer.append(cid );
+    stringBuffer.append(TEXT_19);
+    stringBuffer.append(getQuery(node));
+    stringBuffer.append(TEXT_20);
+    -- 1.1.) CONNECTION --
+    stringBuffer.append(TEXT_21);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_22);
+    
+//Appends the code for setting the connection
+SonesInputBeginUtil sonesInputBeginUtil = new SonesInputBeginUtil();
+sonesInputBeginUtil.createConnection(node);
+
+    stringBuffer.append(TEXT_23);
+    -- 1.1.1) QUERY EXECUTION --
+    stringBuffer.append(TEXT_24);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_25);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_26);
+    stringBuffer.append(sonesInputBeginUtil.getQueryString(node));
+
+<%-- 1.2.) THE SCHEMA INFORMATION --);
+    -- The Dynamics class contains a list which is named "metadatas" as member. It's required to add the schema meta data information as DynamicMetadata objects to this list. --
+    stringBuffer.append(TEXT_27);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_28);
+    -- Currently limmited to support only FROM VertexType SELECT * --
+    stringBuffer.append(TEXT_29);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_30);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_31);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_32);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_33);
+    -- The following shows the mapping to Talend Types  - as far as I saw those are then mapped to Java types
+		// private static String[][] dbMapping = { { "VARCHAR", "id_String" }, { "BIGINT", "id_Long" }, { "INTEGER",
+ 	    // "id_Integer" },
+		// { "DOUBLE", "id_Double" }, { "DATETIME", "id_Date" } };
+--
+    stringBuffer.append(TEXT_34);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_35);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_36);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_37);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_38);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_39);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_40);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_41);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_42);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_43);
+    -- 1.3.) THE DATA --
+    stringBuffer.append(TEXT_44);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_45);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_46);
+    	
+	if(conns != null && conns.size() > 0) {
+	
+		IConnection conn = conns.get(0);
+		String firstConnName = conn.getName();
+
+    stringBuffer.append(TEXT_47);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_48);
+    stringBuffer.append(firstConnName);
+    stringBuffer.append(TEXT_49);
+    stringBuffer.append(attribute.getName());
+    stringBuffer.append(TEXT_50);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_51);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_52);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_53);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_54);
+    stringBuffer.append(firstConnName);
+    stringBuffer.append(TEXT_55);
+    stringBuffer.append(attribute.getName());
+    stringBuffer.append(TEXT_56);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_57);
+    stringBuffer.append(TEXT_58);
+    stringBuffer.append(firstConnName);
+    stringBuffer.append(TEXT_59);
+    stringBuffer.append(attribute.getName());
+    stringBuffer.append(TEXT_60);
+    	
+		if(conns.size() > 1) {
+			
+			for(int j = 1 ; j < conns.size() ; j++) {
+			
+				Connection anotherConn = conns.get(connNO);
+				
+				if((!anotherConn.getName().equals(firstConnName)) && (anotherConn.getLineStyle().hasConnectionCategory(IConnectionCategory.DATA))) {
+				
+					for (routines.system.DynamicMetadata attribute : dcg_<%=cid
+    stringBuffer.append(TEXT_61);
+    stringBuffer.append(anotherConn.getName());
+    stringBuffer.append(TEXT_62);
+    stringBuffer.append(attribute.getName());
+    stringBuffer.append(TEXT_63);
+    stringBuffer.append(firstConnName);
+    stringBuffer.append(TEXT_64);
+    stringBuffer.append(attribute.getName());
+    stringBuffer.append(TEXT_65);
+    
+					}
+				}
+				
+			}
+		}
+	}
+
+    stringBuffer.append(TEXT_66);
+    stringBuffer.append(TEXT_67);
+    return stringBuffer.toString();
+  }
+}

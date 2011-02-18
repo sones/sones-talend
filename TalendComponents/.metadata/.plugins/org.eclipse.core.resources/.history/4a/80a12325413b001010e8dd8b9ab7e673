@@ -1,0 +1,66 @@
+<%@ jet 
+	imports="
+		org.talend.core.model.process.INode 
+		org.talend.core.model.process.ElementParameterParser 
+		org.talend.core.model.metadata.IMetadataTable 
+		org.talend.core.model.metadata.IMetadataColumn 
+		org.talend.core.model.process.IConnection
+		org.talend.core.model.process.IConnectionCategory
+		org.talend.designer.codegen.config.CodeGeneratorArgument
+		org.talend.core.model.metadata.types.JavaTypesManager
+		org.talend.core.model.metadata.types.JavaType
+		java.util.List 
+    	java.util.Map		
+	" 
+%>
+<% 
+    CodeGeneratorArgument codeGenArgument = (CodeGeneratorArgument) argument;
+    INode node = (INode)codeGenArgument.getArgument();
+    String cid = node.getUniqueName();	
+%>
+
+
+<%
+	List<IMetadataTable> metadatas = node.getMetadataList();
+	
+	if ((metadatas!=null)&&(metadatas.size()>0)) {
+		
+		IMetadataTable metadata = metadatas.get(0);		
+		List< ? extends IConnection> conns = node.getIncomingConnections();
+		
+			//The first connection
+			IConnection conn = conns.get(0);
+			
+			if (conn.getLineStyle().hasConnectionCategory(IConnectionCategory.DATA))
+			{
+			%>
+				sones_<%=cid%>.resetInsertStmt();
+				sones_<%=cid%>.setInsertStmtVertexType();
+				
+				<%			
+				for (IMetadataColumn column : metadata.getListColumns()) {
+				
+				%>
+									
+					String ctype_<%=cid%> = "<%=column.getTalendType()%>";
+					String clabel_<%=cid%> = "<%=column.getLabel()%>";
+					String value_<%=cid%> = null;
+				
+					if(<%=conn.getName() %>.<%=column.getLabel() %> != null) {
+						value_<%=cid%> = "" + <%=conn.getName()%>.<%=column.getLabel()%>;
+					}
+					
+					sones_<%=cid%>.addInsertStmtAttr(clabel_<%=cid%>, value_<%=cid%>, ctype_<%=cid%>);				
+				<%
+				}
+				%>
+				
+				sones_<%=cid%>.doInsert();		
+				sones_<%=cid%>.printInsert();
+				
+				nb_line_<%=cid%>++;
+
+			<%	
+			}
+	}
+		%>

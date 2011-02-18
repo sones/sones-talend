@@ -1,0 +1,46 @@
+import org.talend.core.model.process.INode;
+import org.talend.core.model.process.ElementParameterParser;
+import org.talend.core.model.metadata.IMetadataTable;
+import org.talend.core.model.metadata.IMetadataColumn;
+import org.talend.core.model.process.IConnection;
+import org.talend.core.model.process.IConnectionCategory;
+import org.talend.designer.codegen.config.CodeGeneratorArgument;
+import org.talend.core.model.metadata.types.JavaTypesManager;
+import org.talend.core.model.metadata.types.JavaType;
+import java.util.List;
+import java.util.Map;
+
+public class CLASS
+{
+  protected static String nl;
+  public static synchronized CLASS create(String lineSeparator)
+  {
+    nl = lineSeparator;
+    CLASS result = new CLASS();
+    nl = null;
+    return result;
+  }
+
+  public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
+  protected final String TEXT_1 = "/*" + NL + " * sones GraphDB - OpenSource Graph Database - http://www.sones.com" + NL + " * Copyright (C) 2007-2011 sones GmbH" + NL + " *" + NL + " * This file is part of sones GraphDB OpenSource Edition." + NL + " *" + NL + " * sones GraphDB OSE is free software: you can redistribute it and/or modify" + NL + " * it under the terms of the GNU Affero General Public License as published by" + NL + " * the Free Software Foundation, version 3 of the License." + NL + " *" + NL + " * sones GraphDB OSE is distributed in the hope that it will be useful," + NL + " * but WITHOUT ANY WARRANTY; without even the implied warranty of" + NL + " * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the" + NL + " * GNU Affero General Public License for more details." + NL + " *" + NL + " * You should have received a copy of the GNU Affero General Public License" + NL + " * along with sones GraphDB OSE. If not, see <http://www.gnu.org/licenses/>." + NL + " */" + NL;
+  protected final String TEXT_2 = NL + "}" + NL + "globalMap.put(\"";
+  protected final String TEXT_3 = "_NB_LINE\",nb_line_";
+  protected final String TEXT_4 = ");";
+
+  public String generate(Object argument)
+  {
+    final StringBuffer stringBuffer = new StringBuffer();
+    stringBuffer.append(TEXT_1);
+     
+    CodeGeneratorArgument codeGenArgument = (CodeGeneratorArgument) argument;
+    INode node = (INode)codeGenArgument.getArgument();
+    String cid = node.getUniqueName();	
+
+    stringBuffer.append(TEXT_2);
+    stringBuffer.append(cid );
+    stringBuffer.append(TEXT_3);
+    stringBuffer.append(cid );
+    stringBuffer.append(TEXT_4);
+    return stringBuffer.toString();
+  }
+}

@@ -1,0 +1,55 @@
+package de.sones.talend.helper;
+
+/**
+ * 
+ * @author david
+ *
+ */
+public class TypeHelper {
+
+
+	public int strToInt(String value)
+	{
+		return Integer.valueOf(value).intValue();
+	}
+
+	public long strToLong(String value)
+	{
+		return Long.valueOf(value).longValue();
+	}
+
+	public float strToFloat(String value)
+	{
+		return Float.valueOf(value).floatValue();
+	}
+
+	public double strToDouble(String value)
+	{
+		return Double.valueOf(value).doubleValue();
+	}
+
+	public boolean strToBoolean(String value)
+	{
+		return Boolean.valueOf(value).booleanValue();
+	}
+
+	public java.util.Date strToDate(String value)
+	{
+		java.util.Date result = new java.util.Date();
+	
+		//The format is like: Fri Dec 24 00:00:00 CET 2010 
+		java.text.SimpleDateFormat format = new java.text.SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
+	
+		try {
+		
+			result = format.parse(value);
+		}
+		catch (Exception e)
+		{
+			System.err.println("Could not parse date value.");
+		}
+	
+		return result; 	
+	}
+	
+}

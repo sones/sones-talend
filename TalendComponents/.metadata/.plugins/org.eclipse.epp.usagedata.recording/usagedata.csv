@@ -1,0 +1,64 @@
+what,kind,bundleId,bundleVersion,description,time
+activated,workbench,org.eclipse.ui.workbench,3.6.1.M20100826-1330,"",1298022284009
+activated,view,org.eclipse.jdt.ui,3.6.1.r361_v20100825-0800,"org.eclipse.jdt.ui.PackageExplorer",1298022287140
+activated,editor,org.eclipse.ui.editors,3.6.1.r361_v20100825-0800,"org.eclipse.ui.DefaultTextEditor",1298022298081
+activated,view,org.eclipse.jdt.ui,3.6.1.r361_v20100825-0800,"org.eclipse.jdt.ui.PackageExplorer",1298022305831
+activated,editor,org.eclipse.jdt.ui,3.6.1.r361_v20100825-0800,"org.eclipse.jdt.ui.PropertiesFileEditor",1298022318075
+activated,view,org.eclipse.jdt.ui,3.6.1.r361_v20100825-0800,"org.eclipse.jdt.ui.PackageExplorer",1298022319813
+activated,editor,org.eclipse.wst.xml.ui,1.1.102.v201008251905,"org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart",1298022320070
+activated,view,org.eclipse.jdt.ui,3.6.1.r361_v20100825-0800,"org.eclipse.jdt.ui.PackageExplorer",1298022320705
+activated,editor,org.eclipse.jdt.ui,3.6.1.r361_v20100825-0800,"org.eclipse.jdt.ui.PropertiesFileEditor",1298022320937
+activated,view,org.eclipse.jdt.ui,3.6.1.r361_v20100825-0800,"org.eclipse.jdt.ui.PackageExplorer",1298022322911
+activated,editor,org.eclipse.wst.xml.ui,1.1.102.v201008251905,"org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart",1298022327409
+activated,view,org.eclipse.jdt.ui,3.6.1.r361_v20100825-0800,"org.eclipse.jdt.ui.PackageExplorer",1298022328323
+activated,editor,org.eclipse.jdt.ui,3.6.1.r361_v20100825-0800,"org.eclipse.jdt.ui.PropertiesFileEditor",1298022328559
+activated,view,org.eclipse.jdt.ui,3.6.1.r361_v20100825-0800,"org.eclipse.jdt.ui.PackageExplorer",1298022329053
+activated,editor,org.eclipse.wst.xml.ui,1.1.102.v201008251905,"org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart",1298022329292
+activated,view,org.eclipse.jdt.ui,3.6.1.r361_v20100825-0800,"org.eclipse.jdt.ui.PackageExplorer",1298022330269
+deactivated,workbench,org.eclipse.ui.workbench,3.6.1.M20100826-1330,"",1298022341116
+activated,workbench,org.eclipse.ui.workbench,3.6.1.M20100826-1330,"",1298022342672
+error,log,,,"Core exception while retrieving the content description",1298022342789
+error,log,,,"Core exception while retrieving the content description",1298022342790
+error,log,,,"Core exception while retrieving the content description",1298022342792
+error,log,,,"Core exception while retrieving the content description",1298022342793
+error,log,,,"Core exception while retrieving the content description",1298022342798
+error,log,,,"Core exception while retrieving the content description",1298022342800
+error,log,,,"Core exception while retrieving the content description",1298022342802
+error,log,,,"Core exception while retrieving the content description",1298022342804
+error,log,,,"Core exception while retrieving the content description",1298022342808
+error,log,,,"Core exception while retrieving the content description",1298022342809
+error,log,,,"Core exception while retrieving the content description",1298022342811
+error,log,,,"Core exception while retrieving the content description",1298022342814
+error,log,,,"Core exception while retrieving the content description",1298022342820
+error,log,,,"Core exception while retrieving the content description",1298022342822
+error,log,,,"Core exception while retrieving the content description",1298022342823
+error,log,,,"Core exception while retrieving the content description",1298022342825
+error,log,,,"Core exception while retrieving the content description",1298022342829
+error,log,,,"Core exception while retrieving the content description",1298022342832
+error,log,,,"Core exception while retrieving the content description",1298022342834
+error,log,,,"Core exception while retrieving the content description",1298022342836
+error,log,,,"Core exception while retrieving the content description",1298022342840
+error,log,,,"Core exception while retrieving the content description",1298022342842
+error,log,,,"Core exception while retrieving the content description",1298022342844
+error,log,,,"Core exception while retrieving the content description",1298022342845
+deactivated,workbench,org.eclipse.ui.workbench,3.6.1.M20100826-1330,"",1298022348236
+activated,workbench,org.eclipse.ui.workbench,3.6.1.M20100826-1330,"",1298022349735
+started,bundle,org.eclipse.wst.jsdt.debug.core,1.0.1.v201008170101,"org.eclipse.wst.jsdt.debug.core",1298022349841
+closed,workbench,org.eclipse.ui.workbench,3.6.1.M20100826-1330,"",1298022350666
+stopped,bundle,org.eclipse.jst.j2ee.xdoclet.runtime,1.1.300.v201004280700,"org.eclipse.jst.j2ee.xdoclet.runtime",1298022352495
+stopped,bundle,org.eclipse.jst.j2ee.ejb.annotations.xdoclet,1.2.100.v201003112036,"org.eclipse.jst.j2ee.ejb.annotations.xdoclet",1298022352525
+stopped,bundle,org.eclipse.jst.server.generic.jboss,1.6.1.v200904151730,"org.eclipse.jst.server.generic.jboss",1298022352620
+stopped,bundle,org.eclipse.jst.server.generic.jonas,1.5.205.v200805140145,"org.eclipse.jst.server.generic.jonas",1298022352688
+stopped,bundle,org.eclipse.jst.server.generic.oc4j,1.5.206.v20090812,"org.eclipse.jst.server.generic.oc4j",1298022352757
+stopped,bundle,org.eclipse.jst.server.websphere.core,1.0.302.v20080620,"org.eclipse.jst.server.websphere.core",1298022352808
+stopped,bundle,org.eclipse.jst.server.generic.ui,1.0.505.v20100428,"org.eclipse.jst.server.generic.ui",1298022352822
+stopped,bundle,org.eclipse.jst.server.generic.core,1.0.606.v20100512,"org.eclipse.jst.server.generic.core",1298022352839
+stopped,bundle,org.eclipse.mylyn.ide.ant,3.4.0.v20100608-0100-e3x,"org.eclipse.mylyn.ide.ant",1298022352869
+stopped,bundle,org.eclipse.datatools.connectivity.oda.template.ui,3.2.1.v201004090942,"org.eclipse.datatools.connectivity.oda.template.ui",1298022352885
+stopped,bundle,org.eclipse.pde.api.tools.ui,1.0.201.v20100820_r361,"org.eclipse.pde.api.tools.ui",1298022352913
+stopped,bundle,org.eclipse.pde.ds.ui,1.0.100.v20100601,"org.eclipse.pde.ds.ui",1298022352935
+stopped,bundle,org.eclipse.pde.runtime,3.4.200.v20100601,"org.eclipse.pde.runtime",1298022352951
+stopped,bundle,org.eclipse.pde.ua.ui,1.0.100.v20100504,"org.eclipse.pde.ua.ui",1298022352982
+stopped,bundle,org.eclipse.pde.ui.templates,3.4.200.v20100601,"org.eclipse.pde.ui.templates",1298022353006
+stopped,bundle,com.instantiations.designer.core.databinding.xml,8.1.1.r36x201012191058,"com.instantiations.designer.core.databinding.xml",1298022353036
+stopped,bundle,com.instantiations.designer.gxt.databinding,8.1.1.r36x201012191837,"com.instantiations.designer.gxt.databinding",1298022353070

@@ -1,0 +1,341 @@
+import org.talend.core.model.process.INode;
+import org.talend.core.model.process.ElementParameterParser;
+import org.talend.core.model.metadata.IMetadataTable;
+import org.talend.core.model.metadata.IMetadataColumn;
+import org.talend.core.model.process.IConnection;
+import org.talend.core.model.process.IConnectionCategory;
+import org.talend.core.model.metadata.types.JavaTypesManager;
+import org.talend.core.model.metadata.types.JavaType;
+import org.talend.designer.codegen.config.CodeGeneratorArgument;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
+
+public class CLASS
+{
+  protected static String nl;
+  public static synchronized CLASS create(String lineSeparator)
+  {
+    nl = lineSeparator;
+    CLASS result = new CLASS();
+    nl = null;
+    return result;
+  }
+
+  public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
+  protected final String TEXT_1 = "";
+  protected final String TEXT_2 = " " + NL + "" + NL + "" + NL + "\tclass Sones_";
+  protected final String TEXT_3 = NL + "\t{" + NL + "\t\t/**" + NL + "\t\t * We previously gather all values and store them in this 'table'. We do this because via REST a 'FROM ${Vertex type} SELECT *' always returns the whole result set." + NL + "\t\t */" + NL + "\t\tprivate java.util.ArrayList<java.util.HashMap<String, String>> values = new java.util.ArrayList<java.util.HashMap<String, String>>();\t\t" + NL + "\t\tprivate int counter  = 0;" + NL + "\t" + NL + "\t\tpublic Sones_";
+  protected final String TEXT_4 = "()" + NL + "\t\t{" + NL + "\t\t\tgenValues();" + NL + "\t\t}" + NL + "" + NL + "\t    /**" + NL + "\t\t * To fill the values 'table' with data. " + NL + "\t\t */" + NL + "\t\tpublic void genValues()" + NL + "\t\t{" + NL + "\t\t\t" + NL + "\t\tthis.values = new java.util.ArrayList<java.util.HashMap<String, String>>();" + NL + "\t\t\t\t" + NL + "\t\t";
+  protected final String TEXT_5 = "\t\t" + NL + "\t\t\t" + NL + "\t\tde.sones.talend.helper.LitHelper litHelper = new de.sones.talend.helper.LitHelper();" + NL + "\t\t" + NL + "\t\tString host = litHelper.trimSingleQuote(\"";
+  protected final String TEXT_6 = "\");" + NL + "\t\tString port = litHelper.trimSingleQuote(\"";
+  protected final String TEXT_7 = "\");" + NL + "\t\t//The Database property is not yet used" + NL + "\t\tString db = litHelper.trimSingleQuote(\"";
+  protected final String TEXT_8 = "\");" + NL + "\t\tString user  = litHelper.trimSingleQuote(\"";
+  protected final String TEXT_9 = "\");" + NL + "\t\tString password  = litHelper.trimSingleQuote(\"";
+  protected final String TEXT_10 = "\");" + NL + "\t\tString vertexType = litHelper.trimSingleQuote(\"";
+  protected final String TEXT_11 = "\");" + NL + "\t" + NL + "\t\ttry {" + NL + "\t\t\t" + NL + "\t\t\tjava.net.URI uri = new java.net.URI(\"http://\" + host + \":\" + port);" + NL + "\t\t\t" + NL + "\t\t\tde.sones.GraphDSJavaClient.GraphDSJavaClient restClient = new de.sones.GraphDSJavaClient.GraphDSJavaClient(uri,user,password);" + NL + "\t\t\t" + NL + "\t\t\tString queryStr = \"FROM \" + vertexType + \" SELECT *\";" + NL + "\t\t\t" + NL + "\t\t\tde.sones.GraphDSJavaClient.Result.QueryResult result  = restClient.query(queryStr);" + NL + "\t\t\t" + NL + "\t\t\tif (result.getErrors().size() == 0)" + NL + "\t\t\t{" + NL + "\t\t\t\tfor (de.sones.GraphDSJavaClient.API.IVertex vertex : result.getVertices())" + NL + "\t\t\t\t{\t" + NL + "\t\t\t\t\tjava.util.HashMap<String, String> row = new java.util.HashMap<String, String>();" + NL + "\t\t\t\t\t" + NL + "\t\t\t\t\tfor (java.util.Map.Entry<String, Object> attribute : vertex.getAttributes().entrySet())" + NL + "\t\t\t\t\t{" + NL + "\t\t\t\t\t\tboolean isSimpleAttr = (!(attribute.getValue() instanceof de.sones.GraphDSJavaClient.API.Edge)) &&" + NL + "\t\t\t\t\t\t                       (!(attribute.getValue() instanceof de.sones.GraphDSJavaClient.DataStructures.ObjectUUID)) &&" + NL + "\t\t\t\t\t\t                       (!(attribute.getValue() instanceof de.sones.GraphDSJavaClient.DataStructures.ObjectRevisionID))" + NL + "\t\t\t\t\t\t                       ;" + NL + "\t\t\t\t\t\t" + NL + "\t\t\t\t\t\tif (isSimpleAttr)" + NL + "\t\t\t\t\t\t{" + NL + "\t\t\t\t\t\t\tString attributeName = attribute.getKey();\t\t" + NL + "\t\t\t\t\t\t\tString attributeValue = \"\" + attribute.getValue();" + NL + "\t\t\t\t\t\t\t" + NL + "\t\t\t\t\t\t\trow.put(attributeName, attributeValue);" + NL + "\t\t\t\t\t\t\t" + NL + "\t\t\t\t\t\t}\t\t" + NL + "\t\t\t\t\t}" + NL + "\t\t\t\t" + NL + "\t\t\t\t\tthis.values.add(row);" + NL + "\t\t\t\t}" + NL + "\t\t\t}" + NL + "\t\t\telse" + NL + "\t\t\t{" + NL + "\t\t\t\tfor(de.sones.GraphDSJavaClient.Errors.IError error : result.getErrors())" + NL + "\t\t\t\t{" + NL + "\t\t\t\t\tSystem.err.println(error.getMessage());" + NL + "\t\t\t\t}" + NL + "\t\t\t}" + NL + "\t\t}" + NL + "\t\tcatch (Exception e)" + NL + "\t\t{" + NL + "\t\t\te.printStackTrace();" + NL + "\t\t}\t" + NL + "\t}" + NL + "\t\t" + NL + "\t\t" + NL + "\t\t" + NL + "\t\t/**" + NL + "\t\t * To get the next value from the 'values' table" + NL + "\t\t */" + NL + "\t\tpublic java.util.HashMap<String,String> getNextRow()" + NL + "\t\t{" + NL + "\t\t\tjava.util.HashMap<String,String> result = null;" + NL + "\t\t\t" + NL + "\t\t\tresult = this.values.get(this.counter);" + NL + "\t\t\t" + NL + "\t\t\tif (this.counter < values.size() - 1)" + NL + "\t\t\t{" + NL + "\t\t\t\tthis.counter++;\t\t\t" + NL + "\t\t\t}" + NL + "\t\t\t" + NL + "\t\t\treturn result;" + NL + "\t\t}" + NL + "\t\t" + NL + "\t\t/**" + NL + "\t\t * Getter for the 'values' table" + NL + "\t\t */" + NL + "\t\tpublic java.util.ArrayList<java.util.HashMap<String, String>> getValues()" + NL + "\t\t{" + NL + "\t\t\treturn this.values;" + NL + "\t\t}" + NL + "\t}" + NL + "" + NL + "Sones_";
+  protected final String TEXT_12 = " sones_";
+  protected final String TEXT_13 = " = new Sones_";
+  protected final String TEXT_14 = "();" + NL + "de.sones.talend.helper.TypeHelper helper_";
+  protected final String TEXT_15 = " = new de.sones.talend.helper.TypeHelper();" + NL + "" + NL + "int nb_line_";
+  protected final String TEXT_16 = " = 0;" + NL;
+  protected final String TEXT_17 = NL + "\t\t" + NL + "\t\t" + NL + "\t\tfor (int i_";
+  protected final String TEXT_18 = " = 0; i_";
+  protected final String TEXT_19 = " < sones_";
+  protected final String TEXT_20 = ".getValues().size(); i_";
+  protected final String TEXT_21 = "++) {\t\t" + NL + "\t\t\t" + NL + "\t\t\tjava.util.HashMap<String, String> row_";
+  protected final String TEXT_22 = " = sones_";
+  protected final String TEXT_23 = ".getNextRow();" + NL + "\t\t" + NL + "\t\t";
+  protected final String TEXT_24 = "\t\t" + NL + "\t\t\t\t" + NL + "\t\t\t\t" + NL + "\t\t\t\t";
+  protected final String TEXT_25 = NL + "\t\t\t\t\t" + NL + "\t\t\t\tif (row_";
+  protected final String TEXT_26 = ".get(\"";
+  protected final String TEXT_27 = "\")!=null)" + NL + "\t\t\t\t{" + NL + "\t\t\t\t" + NL + "\t\t\t\t";
+  protected final String TEXT_28 = NL + "\t\t\t\t\t\t";
+  protected final String TEXT_29 = ".";
+  protected final String TEXT_30 = " = row_";
+  protected final String TEXT_31 = ".get(\"";
+  protected final String TEXT_32 = "\");\t\t\t\t\t" + NL + "\t\t\t\t";
+  protected final String TEXT_33 = NL + NL + "\t\t\t\t";
+  protected final String TEXT_34 = NL + "\t\t\t\t\t\t";
+  protected final String TEXT_35 = ".";
+  protected final String TEXT_36 = " = helper_";
+  protected final String TEXT_37 = ".strToLong(row_";
+  protected final String TEXT_38 = ".get(\"";
+  protected final String TEXT_39 = "\"));\t\t\t\t\t" + NL + "\t\t\t\t";
+  protected final String TEXT_40 = NL + "\t\t\t\t\t\t\t\t" + NL + "\t\t\t\t";
+  protected final String TEXT_41 = NL + "\t\t\t\t\t\t";
+  protected final String TEXT_42 = ".";
+  protected final String TEXT_43 = " = helper_";
+  protected final String TEXT_44 = ".strToDouble(row_";
+  protected final String TEXT_45 = ".get(\"";
+  protected final String TEXT_46 = "\"));\t\t\t\t\t" + NL + "\t\t\t\t";
+  protected final String TEXT_47 = NL + "\t\t\t\t\t\t\t\t" + NL + "\t\t\t\t";
+  protected final String TEXT_48 = NL + "\t\t\t\t\t\t";
+  protected final String TEXT_49 = ".";
+  protected final String TEXT_50 = " = helper_";
+  protected final String TEXT_51 = ".strToInt(row_";
+  protected final String TEXT_52 = ".get(\"";
+  protected final String TEXT_53 = "\"));\t\t\t\t\t" + NL + "\t\t\t\t";
+  protected final String TEXT_54 = NL + "\t\t\t\t" + NL + "\t\t\t\t" + NL + "\t\t\t\t";
+  protected final String TEXT_55 = NL + "\t\t\t\t\t\t";
+  protected final String TEXT_56 = ".";
+  protected final String TEXT_57 = " = helper_";
+  protected final String TEXT_58 = ".strToDate(row_";
+  protected final String TEXT_59 = ".get(\"";
+  protected final String TEXT_60 = "\"));\t\t\t\t\t" + NL + "\t\t\t\t";
+  protected final String TEXT_61 = NL + "\t\t\t\t" + NL + "" + NL + "\t\t\t\t";
+  protected final String TEXT_62 = NL + "\t\t\t\t\t\t";
+  protected final String TEXT_63 = ".";
+  protected final String TEXT_64 = " = helper_";
+  protected final String TEXT_65 = ".strToFloat(row_";
+  protected final String TEXT_66 = ".get(\"";
+  protected final String TEXT_67 = "\"));\t\t\t\t\t" + NL + "\t\t\t\t";
+  protected final String TEXT_68 = NL + "\t\t\t\t" + NL + "\t\t\t\t" + NL + "\t\t\t\t";
+  protected final String TEXT_69 = NL + "\t\t\t\t\t\t";
+  protected final String TEXT_70 = ".";
+  protected final String TEXT_71 = " = helper_";
+  protected final String TEXT_72 = ".strToBoolean(row_";
+  protected final String TEXT_73 = ".get(\"";
+  protected final String TEXT_74 = "\"));\t\t\t\t\t" + NL + "\t\t\t\t";
+  protected final String TEXT_75 = NL + "\t\t\t\t" + NL + "\t\t\t\t}" + NL + "\t\t\t\telse" + NL + "\t\t\t\t{" + NL + "\t\t\t\t\t";
+  protected final String TEXT_76 = ".";
+  protected final String TEXT_77 = " = null;" + NL + "\t\t\t\t}" + NL + "\t\t\t\t" + NL + "\t\t\t\t";
+  protected final String TEXT_78 = NL + "\t\t\t" + NL + "\t\t\tnb_line_";
+  protected final String TEXT_79 = "++;";
+
+  public String generate(Object argument)
+  {
+    final StringBuffer stringBuffer = new StringBuffer();
+    stringBuffer.append(TEXT_1);
+    
+	CodeGeneratorArgument codeGenArgument = (CodeGeneratorArgument) argument;
+	INode node = (INode)codeGenArgument.getArgument();
+	
+	String cid = node.getUniqueName();
+
+    stringBuffer.append(TEXT_2);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_3);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_4);
+    		
+		String host = ElementParameterParser.getValue(node, "__HOST__");
+		String port = ElementParameterParser.getValue(node, "__PORT__");
+		String db =   ElementParameterParser.getValue(node, "__DBNAME__");
+		String user = ElementParameterParser.getValue(node, "__USER__");
+		String password = ElementParameterParser.getValue(node, "__PASS__");
+		String vertexType = ElementParameterParser.getValue(node, "__VERTEXTYPE__");
+		
+    stringBuffer.append(TEXT_5);
+    stringBuffer.append(host);
+    stringBuffer.append(TEXT_6);
+    stringBuffer.append(port);
+    stringBuffer.append(TEXT_7);
+    stringBuffer.append(db);
+    stringBuffer.append(TEXT_8);
+    stringBuffer.append(user);
+    stringBuffer.append(TEXT_9);
+    stringBuffer.append(password);
+    stringBuffer.append(TEXT_10);
+    stringBuffer.append(vertexType);
+    stringBuffer.append(TEXT_11);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_12);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_13);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_14);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_15);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_16);
+    
+	List<IMetadataTable> metadatas = node.getMetadataList();
+	
+	if ((metadatas!=null)&&(metadatas.size()>0)) {
+		
+		IMetadataTable metadata = metadatas.get(0);
+		
+		List<IMetadataColumn> listColumns = metadata.getListColumns();
+		List< ? extends IConnection> conns = node.getOutgoingConnections();
+		
+		
+    stringBuffer.append(TEXT_17);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_18);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_19);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_20);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_21);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_22);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_23);
+    		
+			//The first connection
+			IConnection conn = conns.get(0);
+			
+			if (conn.getLineStyle().hasConnectionCategory(IConnectionCategory.DATA))
+			{
+				for (IMetadataColumn column : metadata.getListColumns()) {
+				
+    stringBuffer.append(TEXT_24);
+    
+					String ctype = column.getTalendType();
+				
+    stringBuffer.append(TEXT_25);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_26);
+    stringBuffer.append(column.getLabel());
+    stringBuffer.append(TEXT_27);
+    	
+				if(ctype.equals("id_String"))
+				{
+				
+    stringBuffer.append(TEXT_28);
+    stringBuffer.append(conn.getName());
+    stringBuffer.append(TEXT_29);
+    stringBuffer.append(column.getLabel());
+    stringBuffer.append(TEXT_30);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_31);
+    stringBuffer.append(column.getLabel());
+    stringBuffer.append(TEXT_32);
+    
+				}
+				
+    stringBuffer.append(TEXT_33);
+    
+				if(ctype.equals("id_Long"))
+				{
+				
+    stringBuffer.append(TEXT_34);
+    stringBuffer.append(conn.getName());
+    stringBuffer.append(TEXT_35);
+    stringBuffer.append(column.getLabel());
+    stringBuffer.append(TEXT_36);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_37);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_38);
+    stringBuffer.append(column.getLabel());
+    stringBuffer.append(TEXT_39);
+    
+				}
+				
+    stringBuffer.append(TEXT_40);
+    
+				if(ctype.equals("id_Double"))
+				{
+				
+    stringBuffer.append(TEXT_41);
+    stringBuffer.append(conn.getName());
+    stringBuffer.append(TEXT_42);
+    stringBuffer.append(column.getLabel());
+    stringBuffer.append(TEXT_43);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_44);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_45);
+    stringBuffer.append(column.getLabel());
+    stringBuffer.append(TEXT_46);
+    
+				}
+				
+    stringBuffer.append(TEXT_47);
+    
+				if(ctype.equals("id_Integer"))
+				{
+				
+    stringBuffer.append(TEXT_48);
+    stringBuffer.append(conn.getName());
+    stringBuffer.append(TEXT_49);
+    stringBuffer.append(column.getLabel());
+    stringBuffer.append(TEXT_50);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_51);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_52);
+    stringBuffer.append(column.getLabel());
+    stringBuffer.append(TEXT_53);
+    
+				}
+				
+    stringBuffer.append(TEXT_54);
+    
+				if(ctype.equals("id_Date"))
+				{
+				
+    stringBuffer.append(TEXT_55);
+    stringBuffer.append(conn.getName());
+    stringBuffer.append(TEXT_56);
+    stringBuffer.append(column.getLabel());
+    stringBuffer.append(TEXT_57);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_58);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_59);
+    stringBuffer.append(column.getLabel());
+    stringBuffer.append(TEXT_60);
+    
+				}
+				
+    stringBuffer.append(TEXT_61);
+    
+				if(ctype.equals("id_Float"))
+				{
+				
+    stringBuffer.append(TEXT_62);
+    stringBuffer.append(conn.getName());
+    stringBuffer.append(TEXT_63);
+    stringBuffer.append(column.getLabel());
+    stringBuffer.append(TEXT_64);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_65);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_66);
+    stringBuffer.append(column.getLabel());
+    stringBuffer.append(TEXT_67);
+    
+				}
+				
+    stringBuffer.append(TEXT_68);
+    
+				if(ctype.equals("id_Boolean"))
+				{
+				
+    stringBuffer.append(TEXT_69);
+    stringBuffer.append(conn.getName());
+    stringBuffer.append(TEXT_70);
+    stringBuffer.append(column.getLabel());
+    stringBuffer.append(TEXT_71);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_72);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_73);
+    stringBuffer.append(column.getLabel());
+    stringBuffer.append(TEXT_74);
+    
+				}
+				
+    stringBuffer.append(TEXT_75);
+    stringBuffer.append(conn.getName());
+    stringBuffer.append(TEXT_76);
+    stringBuffer.append(column.getLabel());
+    stringBuffer.append(TEXT_77);
+    
+				}
+			}
+			
+    stringBuffer.append(TEXT_78);
+    stringBuffer.append(cid);
+    stringBuffer.append(TEXT_79);
+    
+	}
+
+    return stringBuffer.toString();
+  }
+}
