@@ -126,10 +126,24 @@ class Sones_<%=cid%>
 	 * Encapsulate the given attribute value by the right literals.
 	 */
 	private String litAttrVal(String attrVal, String type)
-	{	
-		String quote = new de.sones.talend.helper.TypeHelper().getTypeToLitMap.get(type);
+	{
+		//TODO: There is currently a problem if using TypeHelper as a class name. The generated Java code would not compile in this case. For now we just use the helper code directly inside this method. 
+		//de.sones.talend.helper.TypeHelper typeHelper = de.sones.talend.helper.TypeHelper();
+		//String quote = typeHelper.getTypeToLitMap().get(type);
 	
-		return  qoute + attrVal + quote;
+		java.util.HashMap<String, String> typeToLitMap = new java.util.HashMap<String, String>();
+
+                typeToLitMap.put("id_String", "'");
+                typeToLitMap.put("id_Long","");
+                typeToLitMap.put("id_Double","");
+                typeToLitMap.put("id_Integer","");
+                typeToLitMap.put("id_Date","'");
+                typeToLitMap.put("id_Float","");
+                typeToLitMap.put("id_Boolean","");
+
+		String quote = typeToLitMap.get(type);		
+
+		return  quote + attrVal + quote;
 	}
 	
 	/**
@@ -161,31 +175,25 @@ class Sones_<%=cid%>
 			
 		String host = litHelper.trimSingleQuote("<%=host%>");
 		String port = litHelper.trimSingleQuote("<%=port%>");
+		int portAsInt = Integer.parseInt(port);
 		String db = litHelper.trimSingleQuote("<%=db%>");
 		String user  = litHelper.trimSingleQuote("<%=user%>");
 		String password  = litHelper.trimSingleQuote("<%=password%>");
 	
-		
-		try {
-			
-			java.net.URI uri = new java.net.URI("http://" + host + ":" + port);
-			
-			de.sones.GraphDSJavaClient.GraphDSJavaClient restClient = new de.sones.GraphDSJavaClient.GraphDSJavaClient(uri,user,password);
-						
-			de.sones.GraphDSJavaClient.Result.QueryResult result  = restClient.query(insertStr);
-			
-			if (result.getErrors().size() != 0)
-			{
-				for(de.sones.GraphDSJavaClient.Errors.IError error : result.getErrors())
-				{
-					System.err.println(error.getMessage());
-				}
-			}
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}	
+		try {           
+
+        		de.sones.GraphDBClient.GraphDBClient restClient = new de.sones.GraphDBClient.GraphDBClient(host, user, password, portAsInt);
+        		de.sones.GraphDBClient.QueryResult.QueryResult result  = restClient.Query(insertStr);
+
+                	if (result.getResultType() != de.sones.GraphDBClient.QueryResult.ResultType.Successful)
+                	{
+                		System.err.println(result.getErrorMessage());
+                	}
+        	}	
+        	catch (Exception e)
+        	{
+                	e.printStackTrace();
+        	}	
 	}
 }
 

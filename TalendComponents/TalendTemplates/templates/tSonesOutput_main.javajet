@@ -57,14 +57,18 @@
 				sones_<%=cid%>.resetInsertStmt();
 				sones_<%=cid%>.setInsertStmtVertexType();
 				
+				String ctype_<%=cid%> = "";
+				String clabel_<%=cid%> = "";
+				String value_<%=cid%> = "";
+
 				<%			
 				for (IMetadataColumn column : metadata.getListColumns()) {
 				
 				%>
 									
-					String ctype_<%=cid%> = "<%=column.getTalendType()%>";
-					String clabel_<%=cid%> = "<%=column.getLabel()%>";
-					String value_<%=cid%> = null;
+					ctype_<%=cid%> = "<%=column.getTalendType()%>";
+					clabel_<%=cid%> = "<%=column.getLabel()%>";
+					value_<%=cid%> = null;
 				
 					if(<%=conn.getName() %>.<%=column.getLabel() %> != null) {
 						value_<%=cid%> = "" + <%=conn.getName()%>.<%=column.getLabel()%>;

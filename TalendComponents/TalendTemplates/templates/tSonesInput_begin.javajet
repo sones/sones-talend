@@ -78,6 +78,7 @@ imports="
 		
 		String host = litHelper.trimSingleQuote("<%=host%>");
 		String port = litHelper.trimSingleQuote("<%=port%>");
+                int portAsInt = Integer.parseInt(port);
 		//The Database property is not yet used
 		String db = litHelper.trimSingleQuote("<%=db%>");
 		String user  = litHelper.trimSingleQuote("<%=user%>");
@@ -86,46 +87,48 @@ imports="
 	
 		try {
 			
-			java.net.URI uri = new java.net.URI("http://" + host + ":" + port);
-			
-			de.sones.GraphDSJavaClient.GraphDSJavaClient restClient = new de.sones.GraphDSJavaClient.GraphDSJavaClient(uri,user,password);
+			de.sones.GraphDBClient.GraphDBClient restClient = new de.sones.GraphDBClient.GraphDBClient(host, user, password, portAsInt);
 			
 			String queryStr = "FROM " + vertexType + " SELECT *";
 			
-			de.sones.GraphDSJavaClient.Result.QueryResult result  = restClient.query(queryStr);
-			
-			if (result.getErrors().size() == 0)
+			de.sones.GraphDBClient.QueryResult.QueryResult result  = restClient.Query(queryStr);
+
+
+			if (result.getResultType() == de.sones.GraphDBClient.QueryResult.ResultType.Successful)
 			{
-				for (de.sones.GraphDSJavaClient.API.IVertex vertex : result.getVertices())
-				{	
-					java.util.HashMap<String, String> row = new java.util.HashMap<String, String>();
-					
-					for (java.util.Map.Entry<String, Object> attribute : vertex.getAttributes().entrySet())
-					{
-						boolean isSimpleAttr = (!(attribute.getValue() instanceof de.sones.GraphDSJavaClient.API.Edge)) &&
-						                       (!(attribute.getValue() instanceof de.sones.GraphDSJavaClient.DataStructures.ObjectUUID)) &&
-						                       (!(attribute.getValue() instanceof de.sones.GraphDSJavaClient.DataStructures.ObjectRevisionID))
-						                       ;
-						
-						if (isSimpleAttr)
-						{
-							String attributeName = attribute.getKey();		
-							String attributeValue = "" + attribute.getValue();
-							
-							row.put(attributeName, attributeValue);
-							
-						}		
-					}
-				
-					this.values.add(row);
-				}
+				for (de.sones.GraphDBClient.Objects.Vertex vertex : result.getVertexViewList())
+                		{
+                        		java.util.HashMap<String, String> row = new java.util.HashMap<String, String>();
+
+                        
+                        		for (de.sones.GraphDBClient.Objects.Property attribute : vertex.getProperties())
+                        		{
+                        			String attributeName = attribute.getId();
+
+                        			boolean isSimpleAttribute = ( !attributeName.equals("VertexID") &&
+                        						      !attributeName.equals("VertexTypeID") &&
+                        						      !attributeName.equals("VertexTypeName") &&
+                        						      !attributeName.equals("Revision") &&
+                        						      !attributeName.equals("Edition") &&
+                        						      !attributeName.equals("CreationDate") &&
+                        						      !attributeName.equals("ModificationDate") &&
+                        						      !attributeName.equals("Comment")
+                        						    );
+                        	
+                        			if (isSimpleAttribute)
+                        			{
+                        	
+                        				String attributeValue = "" + attribute.getValue();         	
+                        				row.put(attributeName, attributeValue);
+                        			}
+                        		}
+                        
+                        		this.values.add(row);
+                		}
 			}
 			else
 			{
-				for(de.sones.GraphDSJavaClient.Errors.IError error : result.getErrors())
-				{
-					System.err.println(error.getMessage());
-				}
+				System.err.println(result.getErrorMessage());
 			}
 		}
 		catch (Exception e)

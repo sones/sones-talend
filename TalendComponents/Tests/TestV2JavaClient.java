@@ -1,3 +1,5 @@
+import java.util.Random;
+
 public class TestV2JavaClient {
 
 	
@@ -17,9 +19,43 @@ public class TestV2JavaClient {
 		int port = 9975;
 		String vertexType = "UserProfile";
 		
+				
+		for (int i = 0; i<10; i++)
+		{
+			insertTest(host, user, password, port, vertexType);
+		}
 
+		selectionTest(host, user, password, port, vertexType);
+	}
+
+	
+	public static void insertTest(String host, String user, String password, int port, String vertexType)
+	{
+		Random generator = new Random();
 		
-		
+		String insertStr = "INSERT INTO " + vertexType + " VALUES ( name = 'hello" + generator.nextInt() + "', age = " + generator.nextInt() + " )";
+
+        try {           
+
+        		de.sones.GraphDBClient.GraphDBClient restClient = new de.sones.GraphDBClient.GraphDBClient(host, user, password, port);
+
+
+        		de.sones.GraphDBClient.QueryResult.QueryResult result  = restClient.Query(insertStr);
+
+                if (result.getResultType() != de.sones.GraphDBClient.QueryResult.ResultType.Successful)
+                {
+                	System.out.println(result.getErrorMessage());
+                }
+        }
+        catch (Exception e)
+        {
+                e.printStackTrace();
+        }
+	}
+	
+	
+	public static void selectionTest(String host, String user, String password, int port, String vertexType) throws Exception
+	{		
 		de.sones.GraphDBClient.GraphDBClient restClient = new de.sones.GraphDBClient.GraphDBClient(host, user, password, port);
 		
         String queryStr = "FROM " + vertexType + " SELECT *";
@@ -36,9 +72,26 @@ public class TestV2JavaClient {
                         for (de.sones.GraphDBClient.Objects.Property attribute : vertex.getProperties())
                         {
                         	String attributeName = attribute.getId();
-                        	String attributeValue = "" + attribute.getValue();
+
+                        	boolean isSimpleAttribute = ( !attributeName.equals("VertexID") &&
+                        								   !attributeName.equals("VertexTypeID") &&
+                        								   !attributeName.equals("VertexTypeName") &&
+                        								   !attributeName.equals("Revision") &&
+                        								   !attributeName.equals("Edition") &&
+                        								   !attributeName.equals("CreationDate") &&
+                        								   !attributeName.equals("ModificationDate") &&
+                        								   !attributeName.equals("Comment")
+                        								 );
+                        	
+                        	if (isSimpleAttribute)
+                        	{
+                        	
+                        		String attributeValue = "" + attribute.getValue();
                         
-                        	row.put(attributeName, attributeValue);
+                        		System.out.println(attributeName + " = " + attributeValue);
+                        	
+                        		row.put(attributeName, attributeValue);
+                        	}
                         }
                         
                         values.add(row);
@@ -50,5 +103,6 @@ public class TestV2JavaClient {
         }
 		
 	}
-
+	
 }
+
