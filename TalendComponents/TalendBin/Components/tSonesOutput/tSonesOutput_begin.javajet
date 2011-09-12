@@ -1,0 +1,203 @@
+/*
+* sones GraphDB Talend Client Library 
+* Copyright (C) 2007-2011 sones GmbH - http://www.sones.com
+*
+* This library is free software; you can redistribute it and/or
+* modify it under the terms of the GNU Lesser General Public
+* License as published by the Free Software Foundation; either
+* version 2.1 of the License, or (at your option) any later version.
+* 
+* This library is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+* Lesser General Public License for more details.
+* 
+* You should have received a copy of the GNU Lesser General Public
+* License along with this library; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
+<%@ jet 
+imports="
+		org.talend.core.model.process.INode 
+		org.talend.core.model.process.ElementParameterParser 
+		org.talend.core.model.metadata.IMetadataTable 
+		org.talend.core.model.metadata.IMetadataColumn
+		org.talend.core.model.process.IConnection
+		org.talend.core.model.process.IConnectionCategory
+		org.talend.core.model.metadata.types.JavaTypesManager
+		org.talend.core.model.metadata.types.JavaType 
+		org.talend.designer.codegen.config.CodeGeneratorArgument
+		java.util.Map
+		java.util.HashMap
+		java.util.List
+		java.util.ArrayList
+	" 
+%>
+
+<%
+	CodeGeneratorArgument codeGenArgument = (CodeGeneratorArgument) argument;
+	INode node = (INode)codeGenArgument.getArgument();
+	
+	String cid = node.getUniqueName();
+%> 
+
+class Sones_<%=cid%>
+{
+	/**
+	 * To successivly build the insert statement
+	 */
+	private StringBuilder insert =  new StringBuilder();
+		
+	/**
+	 * To temp. store the attribute names
+	 */
+	private java.util.ArrayList<String> tmpAttrNames = new java.util.ArrayList<String>();	
+	
+		
+	/**
+     * Reset the INSERT statement by beginning with INSERT INTO
+     */	 
+	public void resetInsertStmt()
+	{
+		this.insert = new StringBuilder("INSERT INTO ");
+		this.tmpAttrNames = new java.util.ArrayList<String>();
+	}
+	
+	/**
+	 * Get the choosen vertex type and then append it to the INSERT statement
+	 */
+	public void setInsertStmtVertexType()
+	{
+		<%
+		String vertexType = ElementParameterParser.getValue(node, "__VERTEXTYPE__");
+		%>
+	
+		this.insert.append("<%=vertexType%>");
+	}
+	
+	/**
+	 * Get the number of attributes and decide based on it how the attribute name and value should be appended to the INSERT statement.
+	 */
+	public void addInsertStmtAttr(String attrName, String attrVal, String type)
+	{
+		<%	
+		int numOfAttr = 0;
+		
+		List<IMetadataTable> metadatas = node.getMetadataList();
+		
+		if ((metadatas!=null)&&(metadatas.size()>0)) {
+		
+			IMetadataTable metadata = metadatas.get(0);
+			
+			numOfAttr = metadata.getListColumns().size();	
+		}			
+		%>
+		
+		int numOfAttr = <%=numOfAttr%>; 
+	
+		this.tmpAttrNames.add(attrName);
+		
+
+		if (tmpAttrNames.size()==1)
+		{
+			insert.append(" VALUES" + " (");
+		}
+		
+		if (attrVal != null)
+		{
+			if (tmpAttrNames.size()==1)
+			{
+				insert.append(attrName + "=" + litAttrVal(attrVal, type));
+			}
+			else
+			{
+				insert.append(", " + attrName + "=" + litAttrVal(attrVal, type));
+			}
+		}
+		
+		if (tmpAttrNames.size()==numOfAttr)
+		{
+			insert.append(")");
+		}
+	}
+	
+	/**
+	 * Encapsulate the given attribute value by the right literals.
+	 */
+	private String litAttrVal(String attrVal, String type)
+	{
+		//TODO: There is currently a problem if using TypeHelper as a class name. The generated Java code would not compile in this case. For now we just use the helper code directly inside this method. 
+		//de.sones.talend.helper.TypeHelper typeHelper = de.sones.talend.helper.TypeHelper();
+		//String quote = typeHelper.getTypeToLitMap().get(type);
+	
+		java.util.HashMap<String, String> typeToLitMap = new java.util.HashMap<String, String>();
+
+                typeToLitMap.put("id_String", "'");
+                typeToLitMap.put("id_Long","");
+                typeToLitMap.put("id_Double","");
+                typeToLitMap.put("id_Integer","");
+                typeToLitMap.put("id_Date","'");
+                typeToLitMap.put("id_Float","");
+                typeToLitMap.put("id_Boolean","");
+
+		String quote = typeToLitMap.get(type);		
+
+		return  quote + attrVal + quote;
+	}
+	
+	/**
+	 * Print the INSERT statement
+	 */ 
+	public void printInsert()
+	{
+		String insertStr = this.insert.toString();
+		
+		System.out.println(insertStr);
+	}
+	
+	/**
+	 * Perform the INSERT statement
+	 */
+	public void doInsert()
+	{
+		String insertStr = this.insert.toString();
+		
+		<%		
+		String host = ElementParameterParser.getValue(node, "__HOST__");
+		String port = ElementParameterParser.getValue(node, "__PORT__");
+		String db =   ElementParameterParser.getValue(node, "__DBNAME__");
+		String user = ElementParameterParser.getValue(node, "__USER__");
+		String password = ElementParameterParser.getValue(node, "__PASS__");
+		%>		
+				
+		de.sones.talend.helper.LitHelper litHelper = new de.sones.talend.helper.LitHelper();		
+			
+		String host = litHelper.trimSingleQuote("<%=host%>");
+		String port = litHelper.trimSingleQuote("<%=port%>");
+		int portAsInt = Integer.parseInt(port);
+		String db = litHelper.trimSingleQuote("<%=db%>");
+		String user  = litHelper.trimSingleQuote("<%=user%>");
+		String password  = litHelper.trimSingleQuote("<%=password%>");
+	
+		try {           
+
+        		de.sones.GraphDBClient.GraphDBClient restClient = new de.sones.GraphDBClient.GraphDBClient(host, user, password, portAsInt);
+        		de.sones.GraphDBClient.QueryResult.QueryResult result  = restClient.Query(insertStr);
+
+                	if (result.getResultType() != de.sones.GraphDBClient.QueryResult.ResultType.Successful)
+                	{
+                		System.err.println(result.getErrorMessage());
+                	}
+        	}	
+        	catch (Exception e)
+        	{
+                	e.printStackTrace();
+        	}	
+	}
+}
+
+
+Sones_<%=cid%> sones_<%=cid%> = new Sones_<%=cid%>();
+
+int nb_line_<%=cid%> = 0;
